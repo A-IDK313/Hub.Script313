@@ -2102,7 +2102,7 @@ function redzlib:MakeWindow(Configs)
 			local DropFrame = Create("Frame", NoClickFrame, {
 				Size = UDim2.new(SelectedFrame.Size.X, 0, 0),
 				BackgroundTransparency = 0.1,
-				BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				AnchorPoint = Vector2.new(0, 1),
 				Name = "DropdownFrame",
 				ClipsDescendants = true,
@@ -2436,7 +2436,7 @@ function redzlib:MakeWindow(Configs)
 			
 			local SliderIcon = Create("Frame", SliderBar, {
 				Size = UDim2.new(0, 6, 0, 12),
-				BackgroundColor3 = Color3.fromRGB(255, 0, 0),
+				BackgroundColor3 = Color3.fromRGB(0, 0, 0),
 				Position = UDim2.fromScale(0.3, 0.5),
 				AnchorPoint = Vector2.new(0.5, 0.5),
 				BackgroundTransparency = 0.2
