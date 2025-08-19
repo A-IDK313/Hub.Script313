@@ -3007,7 +3007,7 @@ Tab:AddButton({
   Callback = function()
           local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3016,7 +3016,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3025,7 +3025,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3034,7 +3034,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3043,7 +3043,7 @@ wait(5)
 
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\✅️جار قفل السيرفر✅️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️جار قفل السيرفر✅️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
     end
@@ -3090,7 +3090,7 @@ Tab:AddButton({
   Callback = function()
           local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3099,7 +3099,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3108,7 +3108,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3117,7 +3117,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\⚠️تحذير سيتم قفل السيرفر⚠️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r⚠️تحذير سيتم قفل السيرفر⚠️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -3126,7 +3126,7 @@ wait(5)
 
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\✅️جار قفل السيرفر✅️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️جار قفل السيرفر✅️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
     end
@@ -3173,7 +3173,7 @@ Tab:AddButton({
   Callback = function()
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\✅️تم ايقاف قفل السيرفر✅️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️تم ايقاف قفل السيرفر✅️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -9078,7 +9078,7 @@ local Tab = Window:MakeTab({"الشات"})
 -- SeÃ§Ã£o: Enviar uma mensagem normal
 local playerInput1 = ""
 
-Tab:AddSection({Name = "رسالة عاديه"})
+Tab:AddSection({Name = "رساله عاديه"})
 
 Tab:AddTextBox({
     Name = "اكتب رسالتك",
@@ -9094,13 +9094,9 @@ Tab:AddButton({
     Callback = function()
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\" .. playerInput1
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r" .. playerInput1
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "تم الارسال",
-                Text = ""
-            })
         end
     end
 })
@@ -9108,10 +9104,10 @@ Tab:AddButton({
 -- SeÃ§Ã£o: Enviar mensagem com prefixo System
 local playerInput2 = ""
 
-Tab:AddSection({Name = "رسالة سيستم"})
+Tab:AddSection({Name = "رساله سيرفر"})
 
 Tab:AddTextBox({
-    Name = "رسالة سيستم",
+    Name = "اكتب رسالتك",
     Default = "",
     TextDisappear = false,
     Callback = function(text)
@@ -9120,25 +9116,21 @@ Tab:AddTextBox({
 })
 
 Tab:AddButton({
-    Name = "ارسال ",
+    Name = "ارسال",
     Callback = function()
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\System: " .. playerInput2
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rSystem: " .. playerInput2
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "تم الارسال",
-                Text = ""
-            })
         end
     end
 })
 
-Tab:AddSection({Name = "رسالة ادمن"})
+Tab:AddSection({Name = "رساله ادمن"})
 
 Tab:AddTextBox({
-    Name = "رسالة ادمن",
+    Name = "اكتب رسالتك",
     Default = "",
     TextDisappear = false,
     Callback = function(text)
@@ -9151,13 +9143,9 @@ Tab:AddButton({
     Callback = function()
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\[Admin]: " .. playerInput1
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rAdmin: " .. playerInput1
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
-            game:GetService("StarterGui"):SetCore("SendNotification", {
-                Title = "تم الارسال",
-                Text = ""
-            })
         end
     end
 })
@@ -12211,7 +12199,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\✅️تم التفعيل بنجاح MT3ATI HUB✅️"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️تم التفعيل بنجاح MT3ATI HUB✅️"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
@@ -12220,7 +12208,7 @@ wait(1)
 
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\👑الافضل👑"
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r👑الافضل👑"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
