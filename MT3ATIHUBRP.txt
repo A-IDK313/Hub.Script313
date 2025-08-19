@@ -12212,36 +12212,3 @@ local TextChatService = game:GetService("TextChatService")
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-local Tab = Window:MakeTab({"السب"})
-
-Tab:AddButton({ 	Name  = "اهينك يا منهاني احط عيري بكس اختك", 	Callback = function()
-local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = "اّّّّهّّّيّّّّنًّّكٍٍّّ يّّّاّّّ مًًّّنًًهانًًًيًًً اًًًحًًطًًُ عًًًيًًًرًًًيًًً بكًسً اًًخًتًًكًًُُ"
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
-        end
-end })
