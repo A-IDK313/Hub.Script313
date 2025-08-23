@@ -9104,7 +9104,7 @@ Tab:AddButton({
 -- SeÃ§Ã£o: Enviar mensagem com prefixo System
 local playerInput2 = ""
 
-Tab:AddSection({Name = "رساله سيرفر"})
+Tab:AddSection({Name = "رساله سيستم"})
 
 Tab:AddTextBox({
     Name = "اكتب رسالتك",
@@ -9149,6 +9149,252 @@ Tab:AddButton({
         end
     end
 })
+
+
+
+
+
+local Tab = Window:MakeTab({"السب"})
+
+local Button = Tab:AddButton({
+  Name = "اهينك يا مهان احط عيري بكس اختك",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rاهينك يا مهان احط عيre بكش اخت..ك"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "بالله لو فيك رجوله كان تتفاهم زي الرجال مب تتهاوش",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rبالله لو فيك رجوله كان تتفاهم زي الرجال مب تتهاوش"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "BAKI MATZAD LI YZ3ZA3NA",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rBAKI MATZAD LI YZ3ZA3NA"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "MRHBA BIK F TO SIJN MADANI",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rMRHBA BIK F TO SIJN MADANI"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "NSAW BLI TO GANAR",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rNSAW BLI TO GANAR"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "ALO TO OU WI TOU",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rALO TO OU WI TOU"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "SMA3THOM M3NDHOM TA JOMLA MOFIDA FOUT RAP 3NDI YA K3K3",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rSMA3THOM M3NDHOM TA JOMLA MOFIDA FOUT RAP 3NDI YA K3K3"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "SIRO TKMCHO RAKOM MAKADICH",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rSIRO TKMCHO RAKOM MAKADICH"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "MSTWAK D3EF",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rMSTWAK D3EF"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "ANEK AHLK YA MFTO7",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rANEK AHLK YA MFTO7"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+
+
+
+
+local Tab = Window:MakeTab({"الردود"})
+
+local Button = Tab:AddButton({
+  Name = "اذا سب امك",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rبالله لو فيك رجوله ما تسب الام دا ابسط مثال انت مو رجال ولا زلمه"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "اذا تبي تقره او هو كان مقهور",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rاوه انا اقهرك اوه انا قاهر شخص ما اعرفه ه ه ه ه"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "اذا مان بدو يضحك الناس عليك",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rه ه ه ه لا ضحكتني تنغش"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "اذا طولت و تبي تنهي الهوشه",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rذا اخرك مستواك ضعيف يبيله تحسين"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "اذا كان مفعل عليك بانق",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rنايس كلبي يلحقني يحرسن ي وين ما اروح"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+
+
+
+
+local Tab = Window:MakeTab({"تنمر"})
+
+local Button = Tab:AddButton({
+  Name = "تنمر على الذوق بالكلام و الشخصية",
+  Callback = function()
+  
+    local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rاذا كان ذوقك في الكلام مثل ذوقك في الشخصيه فلا عجب ان خويي يحتاج نضارات سوده عشان ما يشوف العار الي تمثلينه"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+  end
+})
+
+
+
+
 
 local Tab = Window:MakeTab({"التنقل"})
 
