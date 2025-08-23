@@ -373,7 +373,7 @@ Window:AddMinimizeButton({
     Corner = { CornerRadius = UDim.new(35, 1) },
 })
 
-local Tab = Window:MakeTab({"المعلومات", Icon = "info"})
+local Tab = Window:MakeTab({"المعلومات"})
 
 local Section = Tab:AddSection({
 	Name = "مرحبا بكم"
@@ -411,7 +411,7 @@ local Section = Tab:AddSection({
 	Name = "HASSAN"
 })
 
-local Tab = Window:MakeTab({"السيرفر", Icon = "Server"})
+local Tab = Window:MakeTab({"السيرفر"})
 
 Tab:AddButton({
     Name = "سيرفر عشوائي",
@@ -559,7 +559,7 @@ Toggle1:Callback(function(Value)
  _G.NotificationsEnabled = Value
 end)
 
-local Tab = Window:MakeTab({"الاعب", Icon = "user"})
+local Tab = Window:MakeTab({"الاعب"})
 
 local CoolSlider = Tab:AddSlider({
     Name = "سرعة اللاعب",
@@ -1049,7 +1049,7 @@ loadstring(_G.boomboxb.Client.Source)()
 loadstring(_G.boomboxb.Server.Source)()
 end })
 
-local Tab = Window:MakeTab({"البيت", Icon = "Home"})
+local Tab = Window:MakeTab({"البيت"})
 
 Tab:AddButton({
     Name = "ازالة الحظر",
@@ -1146,7 +1146,7 @@ local colors = {
     end
 end })
 
-local Tab = Window:MakeTab({"المضادات", Icon = "edit"})
+local Tab = Window:MakeTab({"المضادات"})
 
 local Toggle1 = Tab:AddToggle({
   Name = "مضاد الجلوس",
@@ -1227,7 +1227,7 @@ local Toggle2 = Tab:AddToggle({
     end
 })
 
-local Tab = Window:MakeTab({"التخريب", Icon = "users"})
+local Tab = Window:MakeTab({"التخريب"})
 
 local viewing = false
 local loopTP = false
@@ -2449,7 +2449,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/8UXYnedy"))()
     end
 })
 
-local Tab = Window:MakeTab({"مميزات لاق و المزيد", Icon = "userx"})
+local Tab = Window:MakeTab({"مميزات لاق و المزيد"})
 
 Tab:AddSection({ "ادوات الاق" })
 
@@ -3430,7 +3430,7 @@ Tab:AddToggle({
     end
 })
 
-local Tab = Window:MakeTab({"الاجسام", Icon = ""})
+local Tab = Window:MakeTab({"الاجسام"})
 
 local Section = Tab:AddSection({
 	Name = "الارجل"
@@ -3835,7 +3835,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("ChangeCharacterBody", 9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"الملابس", Icon = ""})
+local Tab = Window:MakeTab({"الملابس"})
 
 local Section = Tab:AddSection({
 	Name = "من الافضل انك تشيل الملابس قبل ما تلبس اشي"
@@ -4369,7 +4369,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes",9e9):WaitForChild("Wear",9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"السكنات", Icon = ""})
+local Tab = Window:MakeTab({"السكنات"})
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -8198,7 +8198,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes",9e9):WaitForChild("Wear",9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"سكربتات من صنعي", Icon = "scroll"})
+local Tab = Window:MakeTab({"سكربتات من صنعي"})
 
 local Section = Tab:AddSection({
 	Name = "جميع السكربتات هنا من صنعي"
@@ -9044,9 +9044,9 @@ end)
   end
 })
 
-local Tab = Window:MakeTab({"السكربتات القويه", Icon = "scroll"})
+local Tab = Window:MakeTab({"السكربتات القويه"})
 
-local Tab = Window:MakeTab({"السكربتات", Icon = "scroll"})
+local Tab = Window:MakeTab({"السكربتات"})
 
 Tab:AddButton({
     Name = "tp tool",
@@ -9086,7 +9086,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/fgEZsxws"))()
     end
 })
 
-local Tab = Window:MakeTab({"الشات", Icon = "send"})
+local Tab = Window:MakeTab({"الشات"})
 
 -- SeÃ§Ã£o: Enviar uma mensagem normal
 local playerInput1 = ""
@@ -9163,7 +9163,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"التنقل", Icon = "command"})
+local Tab = Window:MakeTab({"التنقل"})
 
 local Dropdown
 local LastSelectedPlayer = nil
@@ -9224,7 +9224,7 @@ game.Players.PlayerRemoving:Connect(UpdatePlayerDropdown)
 
 UpdatePlayerDropdown()
 
-local Tab = Window:MakeTab({"الاغاني", Icon = "listmusic"})
+local Tab = Window:MakeTab({"الاغاني"})
 
 Tab:AddTextBox({
   Name = "مشغل اغاني للسكيت بورد",
@@ -11947,7 +11947,7 @@ game:GetService("ReplicatedStorage").RE:FindFirstChild("1NoMoto1rVehicle1s"):Fir
 
 end })
 
-local Tab = Window:MakeTab({"الاغاني المجانيه", Icon = "music"})
+local Tab = Window:MakeTab({"الاغاني المجانيه"})
 
 local MusicId = nil
 local MusicToggle = false
@@ -12031,7 +12031,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"الاصوات", Icon = "music4"})
+local Tab = Window:MakeTab({"الاصوات"})
 
 local loopAtivo = false
 local InputID = ""
@@ -12290,7 +12290,7 @@ createDropdown("اختر صوت رعب", {
     }
 }, "jumpscar")
 
-local Tab = Window:MakeTab({"الاسماء", Icon = "usercog"})
+local Tab = Window:MakeTab({"الاسماء"})
 
 local vibrantColors = {
     Color3.new(1, 0, 0),
@@ -12481,7 +12481,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"الكشف", Icon = "settings2"})
+local Tab = Window:MakeTab({"الكشف"})
 
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
 ESP:Toggle(true)
@@ -12497,7 +12497,7 @@ Toggle1:Callback(function(Value)
  ESP.Players = Value
 end)
 
-local Tab = Window:MakeTab({"الاعدادات", Icon = "settings"})
+local Tab = Window:MakeTab({"الاعدادات"})
 
 local Dropdown = Tab:AddDropdown({
   Name = "حجم واجهه السكربت",
