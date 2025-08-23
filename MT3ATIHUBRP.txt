@@ -9150,11 +9150,9 @@ Tab:AddButton({
     end
 })
 
-
-
-
-
-local Tab = Window:MakeTab({"السب"})
+local Section = Tab:AddSection({
+	Name = "السب"
+})
 
 local Button = Tab:AddButton({
   Name = "اهينك يا مهان احط عيري بكس اختك",
@@ -9296,11 +9294,9 @@ local Button = Tab:AddButton({
   end
 })
 
-
-
-
-
-local Tab = Window:MakeTab({"الردود"})
+local Section = Tab:AddSection({
+	Name = "الردود"
+})
 
 local Button = Tab:AddButton({
   Name = "اذا سب امك",
@@ -9372,11 +9368,9 @@ local Button = Tab:AddButton({
   end
 })
 
-
-
-
-
-local Tab = Window:MakeTab({"تنمر"})
+local Section = Tab:AddSection({
+	Name = "التنمر"
+})
 
 local Button = Tab:AddButton({
   Name = "تنمر على الذوق بالكلام و الشخصية",
@@ -9391,10 +9385,6 @@ local Button = Tab:AddButton({
         
   end
 })
-
-
-
-
 
 local Tab = Window:MakeTab({"التنقل"})
 
