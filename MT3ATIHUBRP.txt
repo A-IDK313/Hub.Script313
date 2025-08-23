@@ -351,15 +351,6 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 5;
 })
 
-local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️سيتم تفعيل السكربت بعد 5 ثواني✅️"
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
-        end
-
-wait(1)
-
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/A-IDK313/Hub.Script313/refs/heads/main/Redzhubui.txt"))()
 
 local Window = redzlib:MakeWindow({
@@ -373,7 +364,7 @@ Window:AddMinimizeButton({
     Corner = { CornerRadius = UDim.new(35, 1) },
 })
 
-local Tab = Window:MakeTab({"المعلومات", Icon = "nfo"})
+local Tab = Window:MakeTab({"المعلومات", Icon = "info"})
 local Section = Tab:AddSection({
 	Name = "مرحبا بكم"
 })
