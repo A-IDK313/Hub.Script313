@@ -322,7 +322,7 @@ game.StarterGui:SetCore("SendNotification", {
     Text = "تم التفعيل بنجاح"; -- ARAB TEAM
     Duration = 5;
 })
-game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "MT3ATI HUB Script | V0.9")
+game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", "MT3ATI HUB Script | V1.1")
 
 local args = {
     [1] = "PickingRPNameColor",
@@ -351,10 +351,19 @@ game.StarterGui:SetCore("SendNotification", {
     Duration = 5;
 })
 
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️سيتم تفعيل السكربت بعد 5 ثواني✅️"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+
+wait(1)
+
 local redzlib = loadstring(game:HttpGet("https://raw.githubusercontent.com/A-IDK313/Hub.Script313/refs/heads/main/Redzhubui.txt"))()
 
 local Window = redzlib:MakeWindow({
-  Title = "MT3ATI HUB   |   V0.9",
+  Title = "MT3ATI HUB   |   V1.1",
   SubTitle = "Made By : MT3ATI",
   SaveFolder = "MT3ATI 1 Config"
 })
@@ -364,7 +373,7 @@ Window:AddMinimizeButton({
     Corner = { CornerRadius = UDim.new(35, 1) },
 })
 
-local Tab = Window:MakeTab({"المعلومات"})
+local Tab = Window:MakeTab({"المعلومات", Icon = "nfo"})
 local Section = Tab:AddSection({
 	Name = "مرحبا بكم"
 })
@@ -401,7 +410,7 @@ local Section = Tab:AddSection({
 	Name = "HASSAN"
 })
 
-local Tab = Window:MakeTab({"السيرفر"})
+local Tab = Window:MakeTab({"السيرفر", Icon = "Server"})
 
 Tab:AddButton({
     Name = "سيرفر عشوائي",
@@ -549,7 +558,7 @@ Toggle1:Callback(function(Value)
  _G.NotificationsEnabled = Value
 end)
 
-local Tab = Window:MakeTab({"الاعب"})
+local Tab = Window:MakeTab({"الاعب", Icon = "user"})
 
 local CoolSlider = Tab:AddSlider({
     Name = "سرعة اللاعب",
@@ -1039,7 +1048,7 @@ loadstring(_G.boomboxb.Client.Source)()
 loadstring(_G.boomboxb.Server.Source)()
 end })
 
-local Tab = Window:MakeTab({"البيت"})
+local Tab = Window:MakeTab({"البيت", Icon = "Home"})
 
 Tab:AddButton({
     Name = "ازالة الحظر",
@@ -1136,7 +1145,7 @@ local colors = {
     end
 end })
 
-local Tab = Window:MakeTab({"المضادات"})
+local Tab = Window:MakeTab({"المضادات", Icon = "edit"})
 
 local Toggle1 = Tab:AddToggle({
   Name = "مضاد الجلوس",
@@ -1217,7 +1226,7 @@ local Toggle2 = Tab:AddToggle({
     end
 })
 
-local Tab = Window:MakeTab({"التخريب"})
+local Tab = Window:MakeTab({"التخريب", Icon = "users"})
 
 local viewing = false
 local loopTP = false
@@ -2439,7 +2448,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/8UXYnedy"))()
     end
 })
 
-local Tab = Window:MakeTab({"مميزات لاق و المزيد"})
+local Tab = Window:MakeTab({"مميزات لاق و المزيد", Icon = "userx"})
 
 Tab:AddSection({ "ادوات الاق" })
 
@@ -3420,7 +3429,7 @@ Tab:AddToggle({
     end
 })
 
-local Tab = Window:MakeTab({"الاجسام"})
+local Tab = Window:MakeTab({"الاجسام", Icon = ""})
 local Section = Tab:AddSection({
 	Name = "الارجل"
 })
@@ -3824,7 +3833,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes", 9e9):WaitForChild("ChangeCharacterBody", 9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"الملابس"})
+local Tab = Window:MakeTab({"الملابس", Icon = ""})
 local Section = Tab:AddSection({
 	Name = "من الافضل انك تشيل الملابس قبل ما تلبس اشي"
 })
@@ -4357,7 +4366,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes",9e9):WaitForChild("Wear",9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"سكنات"})
+local Tab = Window:MakeTab({"السكنات", Icon = ""})
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -8186,7 +8195,7 @@ local args = {
         game:GetService("ReplicatedStorage"):WaitForChild("Remotes",9e9):WaitForChild("Wear",9e9):InvokeServer(unpack(args))
 end })
 
-local Tab = Window:MakeTab({"سكربتات من صنعي"})
+local Tab = Window:MakeTab({"سكربتات من صنعي", Icon = "scroll"})
 local Section = Tab:AddSection({
 	Name = "جميع السكربتات هنا من صنعي"
 })
@@ -9031,9 +9040,9 @@ end)
   end
 })
 
-local Tab = Window:MakeTab({"سكربتات قويه"})
+local Tab = Window:MakeTab({"السكربتات القويه", Icon = "scroll"})
 
-local Tab = Window:MakeTab({"سكربتات"})
+local Tab = Window:MakeTab({"السكربتات", Icon = "scroll"})
 
 Tab:AddButton({
     Name = "tp tool",
@@ -9073,7 +9082,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/fgEZsxws"))()
     end
 })
 
-local Tab = Window:MakeTab({"الشات"})
+local Tab = Window:MakeTab({"الشات", Icon = "send"})
 
 -- SeÃ§Ã£o: Enviar uma mensagem normal
 local playerInput1 = ""
@@ -9150,7 +9159,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"التنقل"})
+local Tab = Window:MakeTab({"التنقل", Icon = "command"})
 
 local Dropdown
 local LastSelectedPlayer = nil
@@ -9211,7 +9220,7 @@ game.Players.PlayerRemoving:Connect(UpdatePlayerDropdown)
 
 UpdatePlayerDropdown()
 
-local Tab = Window:MakeTab({"الاغاني"})
+local Tab = Window:MakeTab({"الاغاني", Icon = "listmusic"})
 
 Tab:AddTextBox({
   Name = "مشغل اغاني للسكيت بورد",
@@ -11934,7 +11943,7 @@ game:GetService("ReplicatedStorage").RE:FindFirstChild("1NoMoto1rVehicle1s"):Fir
 
 end })
 
-local Tab = Window:MakeTab({"الاغاني المجانية"})
+local Tab = Window:MakeTab({"الاغاني المجانيه", Icon = "music"})
 
 local MusicId = nil
 local MusicToggle = false
@@ -12018,7 +12027,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"الاصوات"})
+local Tab = Window:MakeTab({"الاصوات", Icon = "music4"})
 
 local loopAtivo = false
 local InputID = ""
@@ -12277,7 +12286,7 @@ createDropdown("اختر صوت رعب", {
     }
 }, "jumpscar")
 
-local Tab = Window:MakeTab({"الاسماء"})
+local Tab = Window:MakeTab({"الاسماء", Icon = "usercog"})
 
 local vibrantColors = {
     Color3.new(1, 0, 0),
@@ -12468,7 +12477,7 @@ Tab:AddButton({
     end
 })
 
-local Tab = Window:MakeTab({"الكشف"})
+local Tab = Window:MakeTab({"الكشف", Icon = "settings2"})
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
 ESP:Toggle(true)
 ESP.Players = true
@@ -12483,7 +12492,7 @@ Toggle1:Callback(function(Value)
  ESP.Players = Value
 end)
 
-local Tab = Window:MakeTab({"الاعدادات"})
+local Tab = Window:MakeTab({"الاعدادات", Icon = "settings"})
 
 local Dropdown = Tab:AddDropdown({
   Name = "حجم واجهه السكربت",
@@ -12508,6 +12517,15 @@ wait(1)
 local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
             local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️تم التفعيل بنجاح MT3ATI HUB✅️"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+
+wait(1)
+
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rالتحديث 1.1 | V1.1"
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
