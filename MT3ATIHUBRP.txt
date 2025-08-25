@@ -9155,7 +9155,7 @@ Tab:AddButton({
 })
 
 -- SeÃ§Ã£o: Enviar uma mensagem normal
-local playerInput1 = ""
+local playerInput5 = ""
 
 Tab:AddSection({Name = "رساله MT3ATI HUB"})
 
@@ -9164,7 +9164,7 @@ Tab:AddTextBox({
     Default = "",
     TextDisappear = false,
     Callback = function(text)
-        playerInput1 = text
+        playerInput5 = text
     end
 })
 
@@ -9173,7 +9173,7 @@ Tab:AddButton({
     Callback = function()
         local TextChatService = game:GetService("TextChatService")
         if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rMT3ATI HUB:" .. playerInput1
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rMT3ATI HUB:" .. playerInput5
             TextChatService.TextChannels.RBXGeneral:SendAsync(message)
         else
         end
