@@ -12829,31 +12829,6 @@ Tab:AddButton({
     end
 })
 
-Tab:AddTextBox({
-  Name = "",
-  Description = "", 
-  PlaceholderText = "",
-  Callback = function(Value)
-        nomeEstiloso = "°•." .. Value .. ".•°"  -- Armazena o texto formatado
-  end
-})
-
-local Button = Tab:AddButton({
-  Name = "",
-  Callback = function()
-      if nomeEstiloso ~= "" then
-    local args = {
-    [1] = "RolePlayBio",
-    [2] ="CLAN TO TOP"
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-        else
-            warn("Nenhum nome estiloso foi inserido!")
-        end
-  end
-})
-
 local Tab = Window:MakeTab({"الكشف"})
 
 local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
