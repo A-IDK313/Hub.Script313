@@ -9154,6 +9154,32 @@ Tab:AddButton({
     end
 })
 
+-- SeÃ§Ã£o: Enviar uma mensagem normal
+local playerInput1 = ""
+
+Tab:AddSection({Name = "رساله MT3ATI HUB"})
+
+Tab:AddTextBox({
+    Name = "اكتب رسالتك",
+    Default = "",
+    TextDisappear = false,
+    Callback = function(text)
+        playerInput1 = text
+    end
+})
+
+Tab:AddButton({
+    Name = "ارسال",
+    Callback = function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rMT3ATI HUB:" .. playerInput1
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+    end
+})
+
 local Tab = Window:MakeTab({"التنقل"})
 
 local Dropdown
