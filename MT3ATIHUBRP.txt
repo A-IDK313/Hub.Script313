@@ -12685,8 +12685,8 @@ Tab:AddToggle({
 
 local nameActive = false
 Tab:AddToggle({
-    Name = "ار جي بي الاسم",
-    Description = "اضغط لتشغيل ار جي بي الاسم",
+    Name = "تلوين الاسم",
+    Description = "اضغط لتشغيل تلوين الاسم",
     Default = false,
     Callback = function(state)
         nameActive = state
@@ -12705,8 +12705,8 @@ Tab:AddToggle({
 
 local bioActive = false
 Tab:AddToggle({
-    Name = "ار جي بي البايو",
-    Description = "اضغط لتشغيل ار جي بي البايو",
+    Name = "تلوين البايو",
+    Description = "اضغط لتشغيل تلوين البايو",
     Default = false,
     Callback = function(state)
         bioActive = state
@@ -12741,8 +12741,8 @@ end
 
 local nameAndBioActive = false
 Tab:AddToggle({
-    Name = "تلوين الاسم و البايو",
-    Description = "اضغط لتلوين الاسم و البايو",
+    Name = "تلوين الاسم و البايو ابيض و اسود مبطء",
+    Description = "اضغط لتلوين الاسم و البايو ابيض و اسود مبطء",
     Default = false,
     Callback = function(state)
         nameAndBioActive = state
@@ -12780,8 +12780,8 @@ end
 local arcuisActive = false
 
 Tab:AddToggle({
-    Name = "",
-    Description = "",
+    Name = "تلوين الاسم و البايو جميع الالوان مبطء",
+    Description = "اضغط هنا لتشغيل تلوين الاسم و البايو الوان مبطءه",
     Default = false,
     Callback = function(state)
         arcuisActive = state
@@ -12827,6 +12827,31 @@ Tab:AddButton({
             warn("Nenhum nome estiloso foi inserido!")
         end
     end
+})
+
+Tab:AddTextBox({
+  Name = "",
+  Description = "", 
+  PlaceholderText = "",
+  Callback = function(Value)
+        nomeEstiloso = "°•." .. Value .. ".•°"  -- Armazena o texto formatado
+  end
+})
+
+local Button = Tab:AddButton({
+  Name = "",
+  Callback = function()
+      if nomeEstiloso ~= "" then
+    local args = {
+    [1] = "RolePlayBio",
+    [2] ="CLAN TO TOP"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
+        else
+            warn("Nenhum nome estiloso foi inserido!")
+        end
+  end
 })
 
 local Tab = Window:MakeTab({"الكشف"})
