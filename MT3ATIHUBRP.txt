@@ -12864,54 +12864,6 @@ local Dropdown = Tab:AddDropdown({
   end
 })
 
-local remote = game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t")
-local selectedPlayer = nil 
-
-local mensagens = {
-	"H",
-	"HI",
-	"HI ",
-	"HI W",
-	"HI WE",
-	"HI WEL",
-	"HI WELC",
-	"HI WELCO",
-	"HI WELCOM",
-	"HI WELCOME",
-	"HI WELCOME ",
-	"HI WELCOME T",
-	"HI WELCOME TO",
-	"HI WELCOME TO ",
-	"HI WELCOME TO M",
-	"HI WELCOME TO MY",
-	"HI WELCOME TO MY ",
-	"HI WELCOME TO MY SC",
-	"HI WELCOME TO MY SCR",
-	"HI WELCOME TO MY SCRI",
-	"HI WELCOME TO MY SCRIP",
-	"HI WELCOME TO MY SCRIPT",
-	"M",
-	"MT",
-	"MT3",
-	"MT3A",
-	"MT3AT",
-	"MT3ATI ",
-	"MT3ATI H",
-	"MT3ATI HU",
-	"MT3ATI HUB",
-	"MT3ATI HUB ",
-	"MT3ATI HUB V",
-	"MT3ATI HUB V1",
-	"MT3ATI HUB V1.",
-	"MT3ATI HUB V1.2",
-}
-
-
-for _, mensagem in ipairs(mensagens) do
-	remote:FireServer("RolePlayBio", mensagem)
-	wait(0.1)
-end
-
 wait(1)
 
 local TextChatService = game:GetService("TextChatService")
