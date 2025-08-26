@@ -110,16 +110,10 @@ local mensagens = {
 	"MT3ATI",
 	"MT3ATI ",
 	"MT3ATI ",
-	"MT3ATI H",
-	"MT3ATI H",
-	"MT3ATI HU",
-	"MT3ATI HU",
-	"MT3ATI HUB",
-	"MT3ATI HUB",
-	"MT3ATI HUB R",
-	"MT3ATI HUB R",
-	"MT3ATI HUB RP",
-	"MT3ATI HUB RP",
+	"MT3ATI R",
+	"MT3ATI R",
+	"MT3ATI RP",
+	"MT3ATI RP",
 }
 
 
@@ -1501,7 +1495,6 @@ local function KillWithCouch()
     if bv then bv:Destroy() end
     ReplicatedStorage.RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
-    local PlayerSection = Troll:AddSection({ Name = "Troll Player" })
 
     -- Função para obter lista de jogadores
     local function getPlayerList()
@@ -1526,7 +1519,7 @@ end
         end
     })
 
-    Troll:AddButton({
+    Tab:AddButton({
         Name = "تحديث القائمه",
         Callback = function()
             local tablePlayers = Players:GetPlayers()
@@ -1621,7 +1614,7 @@ local LocalPlayer = Players.LocalPlayer
 local espNames = {}
 local espConnection1, espConnection2, updateLoop
 
-Troll:AddToggle({
+Tab:AddToggle({
     Name = "ESP",
     Default = false,
     Callback = function(value)
@@ -2713,7 +2706,7 @@ end)
 
 local kill = Tab:AddSection({Name = "فلينق قارب"})
 
-Troll:AddButton({
+Tab:AddButton({
     Name = "فلينق - قارب",
     Callback = function()
         if not selectedPlayerName or not game.Players:FindFirstChild(selectedPlayerName) then
@@ -2818,7 +2811,7 @@ Troll:AddButton({
 })
 print("Fling - Boat button created")
 
-Troll:AddButton({
+Tab:AddButton({
     Name = "اطفاء فلينق - القارب",
     Callback = function()
         local Player = game.Players.LocalPlayer
