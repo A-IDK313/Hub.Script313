@@ -5903,7 +5903,7 @@ Tab:AddButton({
 })
 
 
-local Section = Tab:AddSection({"سباب قنابل/متفجرات"})
+local Section = Tab:AddSection({"سبام قنابل/متفجرات"})
 
 
 local cleartoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s")
