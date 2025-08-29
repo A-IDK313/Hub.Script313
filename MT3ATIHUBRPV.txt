@@ -1260,6 +1260,7 @@ local function KillWithCouch()
     if bv then bv:Destroy() end
     ReplicatedStorage.RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
+
     local PlayerSection = Tab:AddSection({ Name = "Troll Player" })
 
     -- Função para obter lista de jogadores
@@ -3702,7 +3703,6 @@ end
 workspace.CurrentCamera.CameraSubject=game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart")
   end
 })
-
 
 local Tab = Window:MakeTab({"Avatar", "rbxassetid://10734952036"})
 
