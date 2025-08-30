@@ -679,8 +679,12 @@ pcall(function()
     })
 end)
 
+
+
+
+
 -- Music Section
-local MusicSection = CarTab:AddSection({"اغاني للسياره"})
+local MusicSection = CarTab:AddSection({"اغاني للبيت"})
 
 local musicIds = {
     "71373562243752", "138129019858244", "138480372357526", "122199933878670",
@@ -704,26 +708,6 @@ local musicIds = {
     "98371771055411", "111668097052966", "140095882383991", "122873874738223",
     "105461615542794"
 }
-
-local function playCarMusic(musicId)
-    if musicId and musicId ~= "" then
-        local carArgs = {
-            [1] = "PickingCarMusicText",
-            [2] = musicId
-        }
-        game:GetService("ReplicatedStorage").RE:FindFirstChild("1Player1sCa1r"):FireServer(unpack(carArgs))
-    end
-end
-
-local function playScooterMusic(musicId)
-    if musicId and musicId ~= "" then
-        local scooterArgs = {
-            [1] = "PickingScooterMusicText",
-            [2] = musicId
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1NoMoto1rVehicle1s"):FireServer(unpack(scooterArgs))
-    end
-end
 
 local function playHouseMusic(musicId)
     if musicId and musicId ~= "" then
@@ -750,6 +734,10 @@ CarTab:AddDropdown({
         playHouseMusic(value)
     end
 })
+
+
+
+
 
 pcall(function()
     HouseTab:AddSection({ Name = "الانتقال للبيوت" })
