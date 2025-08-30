@@ -275,9 +275,240 @@ Tab:AddButton({
 })
 
 
+-- Aba Local Player
+local LocalPlayerTab = Window:MakeTab({"الاعب", "user"})
+
+local Section = LocalPlayerTab:AddSection({
+    Name = "السرعه, القفز و الجاذبيه"
+})
+
+LocalPlayerTab:AddTextBox({
+    Name = "سرعه الاعب",
+    PlaceholderText = "ادخل مدى السرعه",
+    Callback = function(value)
+        local speed = tonumber(value)
+        if speed and pl.Character and pl.Character:FindFirstChild("Humanoid") then
+            pl.Character.Humanoid.WalkSpeed = speed
+        else
+            warn("Velocidade inválida ou personagem não encontrado!")
+        end
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "ارجاع السرعه الطبيعيه",
+    Callback = function()
+        if pl.Character and pl.Character:FindFirstChild("Humanoid") then
+            pl.Character.Humanoid.WalkSpeed = 16
+        end
+    end
+})
+
+LocalPlayerTab:AddTextBox({
+    Name = "القفز",
+    PlaceholderText = "ادخل مدى القفز",
+    Callback = function(value)
+        local jumpHeight = tonumber(value)
+        if jumpHeight and pl.Character and pl.Character:FindFirstChild("Humanoid") then
+            pl.Character.Humanoid.JumpPower = jumpHeight
+        else
+            warn("Altura de pulo inválida ou personagem não encontrado!")
+        end
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "ارجاع القفز الطبيعي",
+    Callback = function()
+        if pl.Character and pl.Character:FindFirstChild("Humanoid") then
+            pl.Character.Humanoid.JumpPower = 50
+        end
+    end
+})
+
+LocalPlayerTab:AddTextBox({
+    Name = "الجاذبيه",
+    PlaceholderText = "ادخل مدى الجاذبيه",
+    Callback = function(value)
+        local gravity = tonumber(value)
+        if gravity then
+            workspace.Gravity = gravity
+        else
+            warn("Gravidade inválida!")
+        end
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "ارجاع الجاذبيه الطبيعيه",
+    Callback = function()
+        workspace.Gravity = 196.2
+    end
+})
+
+-- Tab 4: Anti Sit
+Tab:AddSection({ "مضاد جلوس" })
+Tab:AddToggle({
+    Name = "مضاد جلوس",
+    Description = "",
+    Default = true,
+    Callback = function(Value)
+        local player = game.Players.LocalPlayer
+        local connections = {}
+        local runService = game:GetService("RunService")
+
+
+        local function preventSitting(humanoid)
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                local sitConnection = humanoid.StateChanged:Connect(function(_, newState)
+                    if newState == Enum.HumanoidStateType.Seated then
+                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
+                    end
+                end)
+                table.insert(connections, sitConnection)
+            end
+        end
+
+
+        local function monitorCharacter()
+            local function onCharacterAdded(character)
+                local humanoid = character:WaitForChild("Humanoid")
+                preventSitting(humanoid)
+            end
+
+
+            local characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
+            table.insert(connections, characterAddedConnection)
+
+
+            if player.Character then
+                onCharacterAdded(player.Character)
+            end
+        end
+
+
+        local function resetSitting()
+            for _, connection in ipairs(connections) do
+                connection:Disconnect()
+            end
+            connections = {}
+            local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+            end
+        end
+
+
+        if Value then
+            monitorCharacter()
+            local heartbeatConnection = runService.Heartbeat:Connect(function()
+                local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+                end
+            end)
+            table.insert(connections, heartbeatConnection)
+        else
+            resetSitting()
+        end
+    end
+})
+
+Section = LocalPlayerTab:AddSection({
+    Name = "Spam Chat"
+})
+
+local TextSave
+local tcs = game:GetService("TextChatService")
+local chat = tcs.ChatInputBarConfiguration and tcs.ChatInputBarConfiguration.TargetTextChannel
+
+function sendchat(msg)
+    if not msg or msg == "" then return end
+    if tcs.ChatVersion == Enum.ChatVersion.LegacyChatService then
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
+        end)
+        if not success then
+            warn("Erro ao enviar chat: " .. err)
+        end
+    elseif chat then
+        local success, err = pcall(function()
+            chat:SendAsync(msg)
+        end)
+        if not success then
+            warn("Erro ao enviar chat: " .. err)
+        end
+    end
+end
+
+LocalPlayerTab:AddTextBox({
+    Name = "Enter text",
+    PlaceholderText = "Enter Message",
+    Callback = function(text)
+        TextSave = text
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "Send Chat",
+    Callback = function()
+        sendchat(TextSave)
+    end
+})
+
+getgenv().ChaosHubEnviarDelay = 1
+
+LocalPlayerTab:AddSlider({
+    Name = "Delay to Spam",
+    Min = 0.4,
+    Max = 10,
+    Default = 1,
+    Increment = 0.1,
+    Callback = function(Value)
+        getgenv().ChaosHubEnviarDelay = Value
+    end
+})
+
+LocalPlayerTab:AddToggle({
+    Name = "Spam Chat",
+    Default = false,
+    Flag = "Spawn with texts",
+    Callback = function(Value)
+        getgenv().ChaosHubSpawnText = Value
+        while getgenv().ChaosHubSpawnText do
+            sendchat(TextSave)
+            task.wait(getgenv().ChaosHubEnviarDelay)
+        end
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "Spam chat Hacked By MI TEAM",
+    Callback = function()
+        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Hacked by MI TEAM")
+        else 
+            print("Nadaa")
+    end
+end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "Clear Chat",
+    Callback = function()
+        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
+            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg2\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Chat Cleared")
+        else 
+            print("Nadaa")
+    end
+end
+})
+
+
 -- Variáveis globais
 local isUnbanActive = false
-local HouseTab = Window:MakeTab({"House", "home"})
+local HouseTab = Window:MakeTab({"البيت", "home"})
 local SelectHouse = nil
 local NoclipDoor = nil
 
@@ -298,7 +529,7 @@ end
 -- Função para atualizar a lista de casas
 -- Crie o dropdown uma vez e guarde a referência
 local houseDropdown = HouseTab:AddDropdown({
-    Name = "Choose a House",
+    Name = "اختار البيت",
     Options = getHouseList(),
     Default = "...",
     Callback = function(Value)
@@ -329,7 +560,7 @@ pcall(DropdownHouseUpdate)
 -- Botão para atualizar lista de casas
 pcall(function()
     HouseTab:AddButton({
-        Name = "Update List of Houses.",
+        Name = "تحديث القائمه",
         Callback = function()
             pcall(DropdownHouseUpdate)
         end
@@ -339,7 +570,7 @@ end)
 -- Botão para teleportar para casa
 pcall(function()
     HouseTab:AddButton({
-        Name = "Teleport to house.",
+        Name = "الانتقال للبيت",
         Callback = function()
             local House = workspace["001_Lots"]:FindFirstChild(tostring(SelectHouse))
             if House and game.Players.LocalPlayer.Character then
@@ -354,7 +585,7 @@ end)
 -- Botão para teleportar para cofre
 pcall(function()
     HouseTab:AddButton({
-        Name = "Teleport to chest",
+        Name = "الانتقال للخزنه",
         Callback = function()
             local House = workspace["001_Lots"]:FindFirstChild(tostring(SelectHouse))
             if House and House:FindFirstChild("HousePickedByPlayer") and game.Players.LocalPlayer.Character then
@@ -374,7 +605,7 @@ end)
 -- Toggle para atravessar porta
 pcall(function()
     NoclipDoor = HouseTab:AddToggle({
-        Name = "Cross the House Door",
+        Name = "اختراق باب البيت",
         Description = "",
         Default = false,
         Callback = function(Value)
@@ -399,7 +630,7 @@ end)
 -- Toggle para tocar campainha
 pcall(function()
     HouseTab:AddToggle({
-        Name = "Ring the Bell",
+        Name = "رن جرس البيت",
         Description = "",
         Default = false,
         Callback = function(Value)
@@ -425,7 +656,7 @@ end)
 -- Toggle para bater na porta
 pcall(function()
     HouseTab:AddToggle({
-        Name = "Knock on the Door",
+        Name = "دق باب البيت",
         Description = "",
         Default = false,
         Callback = function(Value)
@@ -447,8 +678,81 @@ pcall(function()
         end
     })
 end)
+
+-- Music Section
+local MusicSection = CarTab:AddSection({"اغاني للسياره"})
+
+local musicIds = {
+    "71373562243752", "138129019858244", "138480372357526", "122199933878670",
+    "74187181906707", "82793916573031", "107421761958790", "91394092603440",
+    "113198957973421", "81452315991527", "93786060174790", "74752089069476",
+    "131592235762789", "132081774507495", "124394293950763", "83381647646350",
+    "16190782181", "1841682637", "3148329638", "124928367733395",
+    "106317184644394", "100247055114504", "107035638005233", "109351649716900",
+    "84751398517083", "125259969174449", "89269071829332", "88094479399489",
+    "72440232513341", "92893359226454", "111281710445018", "98677515506006",
+    "105882833374061", "104541292443133", "105832154444494", "84733736048142",
+    "94718473830640", "130324826943718", "123039027577735", "113312785512702",
+    "139161205970637", "113768944849093", "135667903253566", "81335392002580",
+    "77428091165211", "14145624031", "8080255618", "8654835474",
+    "13530439502", "18841894272", "90323407842935", "136932193331774",
+    "113504863495384", "1836175030", "79998949362539", "109188610023287",
+    "134939857094956", "132245626038510", "124567809277408", "72591334498716",
+    "76578817848504", "17422156627", "81902909302285", "130449561461006",
+    "110519234838026", "106434295960535", "86271123924168", "85481949732828",
+    "106476166672589", "87968531262747", "73966367524216", "137962454483542",
+    "98371771055411", "111668097052966", "140095882383991", "122873874738223",
+    "105461615542794"
+}
+
+local function playCarMusic(musicId)
+    if musicId and musicId ~= "" then
+        local carArgs = {
+            [1] = "PickingCarMusicText",
+            [2] = musicId
+        }
+        game:GetService("ReplicatedStorage").RE:FindFirstChild("1Player1sCa1r"):FireServer(unpack(carArgs))
+    end
+end
+
+local function playScooterMusic(musicId)
+    if musicId and musicId ~= "" then
+        local scooterArgs = {
+            [1] = "PickingScooterMusicText",
+            [2] = musicId
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1NoMoto1rVehicle1s"):FireServer(unpack(scooterArgs))
+    end
+end
+
+local function playHouseMusic(musicId)
+    if musicId and musicId ~= "" then
+        local houseArgs = {
+            [1] = "PickHouseMusicText",
+            [2] = musicId
+        }
+        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Player1sHous1e"):FireServer(unpack(houseArgs))
+    end
+end
+
+CarTab:AddTextBox({
+    Name = "كود الاغنيه",
+    PlaceholderText = "ادخل كود الاغنيه",
+    Callback = function(value)
+        playHouseMusic(value)
+    end
+})
+
+CarTab:AddDropdown({
+    Name = "اختار الاغنيه (تحتاج لقيمباس)",
+    Options = musicIds,
+    Callback = function(value)
+        playHouseMusic(value)
+    end
+})
+
 pcall(function()
-    HouseTab:AddSection({ Name = "Teleport to Houses" })
+    HouseTab:AddSection({ Name = "الانتقال للبيوت" })
 end)
 
 -- Lista de casas para teletransporte
@@ -499,7 +803,7 @@ end)
 -- Dropdown para teletransporte
 pcall(function()
     HouseTab:AddDropdown({
-        Name = "Choose House",
+        Name = "اختار البيت",
         Options = housenames,
         Callback = function(casaSelecionada)
             local player = game.Players.LocalPlayer
@@ -555,7 +859,7 @@ local function disableNoclip()
 end
 
 HouseTab:AddToggle({
-    Name = "Unban houses",
+    Name = "فك البان",
     Default = false,
     Callback = function(state)
         if state then
@@ -576,13 +880,13 @@ end)
 
 -- Seção para Casa RGB
 pcall(function()
-    HouseTab:AddSection({ Name = "RGB House" })
+    HouseTab:AddSection({ Name = "" })
 end)
 
 -- Toggle para Casa RGB
 pcall(function()
     HouseTab:AddToggle({
-        Name = "RGB House",
+        Name = "تلوين البيت",
         Default = false,
         Callback = function(state)
             toggleHouseRGB(state)
@@ -609,7 +913,7 @@ function startAutoUnban()
     end
 end
 
-local CarTab = Window:MakeTab({"Vehicles", "car"})
+local CarTab = Window:MakeTab({"السياره", "car"})
 
 -- Colors for RGB
 local colors = {
@@ -645,140 +949,8 @@ local function changeCarColor()
     end
 end
 
-CarTab:AddButton({
-    Name = "Remove All Cars",
-    Callback = function()
-        local ofnawufn = false
-
-if ofnawufn == true then
-    return
-end
-ofnawufn = true
-
-local cawwfer = "MilitaryBoatFree" -- Alterado para MilitaryBoatFree
-local oldcfffff = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1754, -2, 58) -- Coordenadas atualizadas
-wait(0.3)
-
-local args = {
-    [1] = "PickingBoat", -- Alterado para PickingBoat
-    [2] = cawwfer
-}
-
-game:GetService("ReplicatedStorage").RE:FindFirstChild("1Ca1r"):FireServer(unpack(args))
-wait(1)
-
-local wrinfjn
-for _, errb in pairs(game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"]:GetDescendants()) do
-    if errb:IsA("VehicleSeat") then
-        wrinfjn = errb
-    end
-end
-
-repeat
-    if game.Players.LocalPlayer.Character.Humanoid.Health == 0 then return end
-    if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-        if not game.Players.LocalPlayer.Character.Humanoid.SeatPart == wrinfjn then
-            game.Players.LocalPlayer.Character.Humanoid.Sit = false
-        end
-    end
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame
-    task.wait()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame + Vector3.new(0,1,0)
-    task.wait()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame + Vector3.new(0,-1,0)
-    task.wait()
-until game.Players.LocalPlayer.Character.Humanoid.SeatPart == wrinfjn
-
-for _, wifn in pairs(game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"]:GetDescendants()) do
-    if wifn.Name == "PhysicalWheel" then
-        wifn:Destroy()
-    end
-end
-
-local FLINGED = Instance.new("BodyThrust", game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass) 
-FLINGED.Force = Vector3.new(50000, 0, 50000) 
-FLINGED.Name = "FLING"
-FLINGED.Location = game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.Position
-
-for _, wvwvwasc in pairs(game.workspace.Vehicles:GetChildren()) do
-    for _, ascegr in pairs(wvwvwasc:GetDescendants()) do
-        if ascegr.Name == "VehicleSeat" then
-            local targetcar = ascegr
-            local tet = Instance.new("BodyVelocity", game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass)
-            tet.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-            tet.P = 1250
-            tet.Velocity = Vector3.new(0,0,0)
-            tet.Name = "#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"
-            for m=1,25 do
-                local pos = {x=0, y=0, z=0}
-                pos.x = targetcar.Position.X
-                pos.y = targetcar.Position.Y
-                pos.z = targetcar.Position.Z
-                pos.x = pos.x + targetcar.Velocity.X / 2
-                pos.y = pos.y + targetcar.Velocity.Y / 2
-                pos.z = pos.z + targetcar.Velocity.Z / 2
-                if pos.y <= -200 then
-                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(0,1000,0)
-                else
-                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z))
-                    task.wait()
-                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) + Vector3.new(0,-2,0)
-                    task.wait()
-                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) * CFrame.new(0,0,2)
-                    task.wait()
-                    game.workspace.Vehicles[
-game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) * CFrame.new(2,0,0)
-                    task.wait()
-                end
-                task.wait()
-            end
-        end
-    end
-end
-
-task.wait()
-local args = {
-    [1] = "DeleteAllVehicles"
-}
-
-game:GetService("ReplicatedStorage").RE:FindFirstChild("1Ca1r"):FireServer(unpack(args))
-game.Players.LocalPlayer.Character.Humanoid.Sit = false
-wait()
-local tet = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
-tet.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
-tet.P = 1250
-tet.Velocity = Vector3.new(0,0,0)
-tet.Name = "#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"
-wait(0.1)
-for m=1,2 do 
-    task.wait()
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcfffff
-end
-wait(1)
-game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcfffff
-wait()
-game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"):Destroy()
-wait(0.2)
-ofnawufn = false
-    end
-})
-
-CarTab:AddParagraph({"Information:", "I recommend using it twice to ensure all vehicles are removed."})
-
-CarTab:AddButton({
-    Name = "Bring All Cars",
-    Callback = function()
-        for _, v in next, workspace.Vehicles:GetChildren() do
-            v:SetPrimaryPartCFrame(game.Players.LocalPlayer.Character:GetPrimaryPartCFrame())
-        end
-    end
-})
-
-CarTab:AddParagraph({"Information:", "Pulls all cars from the server to you"})
-
 -- Speed V1 Section
-local SpeedSection = CarTab:AddSection({"Speed V1"})
+local SpeedSection = CarTab:AddSection({"السرعه V1"})
 
 local Speed = 50
 local Turbo = 50
@@ -794,7 +966,7 @@ local function ChangeCarSpeedAndTurbo(speedValue, turboValue)
             body.Turbo.Value = turboValue
             wait(0.1)
             redzlib:MakeNotification({
-                Name = "MI Hub",
+                Name = "MT3ATI HUB",
                 Content = "Done, You can Move Now!",
                 Time = 5
             })
@@ -815,7 +987,7 @@ local function ChangeCarSpeedAndTurbo(speedValue, turboValue)
 end
 
 CarTab:AddTextBox({
-    Name = "Speed",
+    Name = "السرعه",
     PlaceholderText = "50",
     Callback = function(value)
         local newSpeed = tonumber(value)
@@ -826,7 +998,7 @@ CarTab:AddTextBox({
 })
 
 CarTab:AddTextBox({
-    Name = "Turbo",
+    Name = "التيربو",
     PlaceholderText = "50",
     Callback = function(value)
         local newTurbo = tonumber(value)
@@ -837,7 +1009,7 @@ CarTab:AddTextBox({
 })
 
 CarTab:AddTextBox({
-    Name = "Drift",
+    Name = "الدريفت",
     PlaceholderText = "50",
     Callback = function(value)
         local args = {
@@ -849,17 +1021,17 @@ CarTab:AddTextBox({
 })
 
 CarTab:AddButton({
-    Name = "Apply Speed, Turbo and drift",
+    Name = "وضع السرعه و التيربو و الدريفت",
     Callback = function()
         ChangeCarSpeedAndTurbo(Speed, Turbo)
     end
 })
 
 -- Turbo V2 Section
-local TurboSection = CarTab:AddSection({"Turbo V2"})
+local TurboSection = CarTab:AddSection({"التيربو V2"})
 
 CarTab:AddButton({
-    Name = "Turbo V2 [Better]",
+    Name = "تيربو V2",
     Callback = function()
      local player = game.Players.LocalPlayer
 local character = player.Character or player.CharacterAdded:Wait()
@@ -972,10 +1144,10 @@ botaoMinimizar.MouseButton1Down:Connect(alternarBotoes)
     end
 })
 
-CarTab:AddParagraph({"Information:", "Both turbos do not need Gamepass"})
+CarTab:AddParagraph({"ملاحظه:", "لا تحتاج لقيمباس لتشغيل هذا التيربو"})
 
 -- Music Section
-local MusicSection = CarTab:AddSection({"Music for Cars, Houses"})
+local MusicSection = CarTab:AddSection({"اغاني للسياره"})
 
 local musicIds = {
     "71373562243752", "138129019858244", "138480372357526", "122199933878670",
@@ -1031,32 +1203,28 @@ local function playHouseMusic(musicId)
 end
 
 CarTab:AddTextBox({
-    Name = "Music ID (Gamepass Required)",
-    PlaceholderText = "Enter Music ID",
+    Name = "كوظ الاغنيه (يحتاج لقيمباس)",
+    PlaceholderText = "ادخل كود الاغنيه",
     Callback = function(value)
         playCarMusic(value)
         playScooterMusic(value)
-        playHouseMusic(value)
     end
 })
 
 CarTab:AddDropdown({
-    Name = "Select Music (Gamepass Required)",
+    Name = "اختار الاغنيه (يحتاج لقيمباس)",
     Options = musicIds,
     Callback = function(value)
         playCarMusic(value)
         playScooterMusic(value)
-        playHouseMusic(value)
     end
 })
 
-CarTab:AddParagraph({"Note", "The music script works in all cars and homes"})
-
 -- Car RGB Section
-local RGBSection = CarTab:AddSection({"Car RGB"})
+local RGBSection = CarTab:AddSection({"تلوين السياره"})
 
 CarTab:AddToggle({
-    Name = "Car RGB",
+    Name = "تلوين السياره",
     Default = false,
     Callback = function(state)
         isColorChanging = state
@@ -1067,10 +1235,8 @@ CarTab:AddToggle({
     end
 })
 
-CarTab:AddParagraph({"Note", "Enabling this will make your car RGB"})
-
 -- Spam Horn Section
-local HornSection = CarTab:AddSection({"Spam Horn"})
+local HornSection = CarTab:AddSection({""})
 
 local spamming = false
 local args = {"Horn"}
@@ -1083,7 +1249,7 @@ local function spamHorn()
 end
 
 CarTab:AddToggle({
-    Name = "Spam Horn",
+    Name = "سبام الزمور",
     Default = false,
     Callback = function(value)
         spamming = value
@@ -1094,10 +1260,10 @@ CarTab:AddToggle({
 })
 
 -- Fly Car Section
-local FlySection = CarTab:AddSection({"Fly Car"})
+local FlySection = CarTab:AddSection({""})
 
 CarTab:AddButton({
-    Name = "Fly Car",
+    Name = "طيران السياره",
     Callback = function()
         --by Luscaa
 -- Version: 4.1
@@ -1150,7 +1316,7 @@ ddnsfbfwewefe.BorderSizePixel = 0
 ddnsfbfwewefe.Position = UDim2.new(-0.000210968778, 0, -0.00395679474, 0)
 ddnsfbfwewefe.Size = UDim2.new(0, 237, 0, 27)
 ddnsfbfwewefe.Font = Enum.Font.SourceSans
-ddnsfbfwewefe.Text = "by Lusquinha_067"
+ddnsfbfwewefe.Text = "الصانع: MT3ATI"
 ddnsfbfwewefe.TextColor3 = Color3.fromRGB(255, 255, 255)
 ddnsfbfwewefe.TextScaled = true
 ddnsfbfwewefe.TextSize = 14.000
@@ -1178,7 +1344,7 @@ Fly.BorderSizePixel = 0
 Fly.Position = UDim2.new(0.0759493634, 0, 0.705797076, 0)
 Fly.Size = UDim2.new(0, 199, 0, 32)
 Fly.Font = Enum.Font.SourceSans
-Fly.Text = "Enable"
+Fly.Text = "تشغيل"
 Fly.TextColor3 = Color3.fromRGB(255, 255, 255)
 Fly.TextScaled = true
 Fly.TextSize = 14.000
@@ -1186,7 +1352,7 @@ Fly.TextWrapped = true
 Fly.MouseButton1Click:Connect(function()
 	local HumanoidRP = game.Players.LocalPlayer.Character.HumanoidRootPart
 	Fly.Visible = false
-	Stat2.Text = "On"
+	Stat2.Text = "مشغل"
 	Stat2.TextColor3 = Color3.fromRGB(0, 255, 0)
 	Unfly.Visible = true
 	Flyon.Visible = true
@@ -1209,7 +1375,7 @@ Speeed.Position = UDim2.new(0.0759493634, 0, 0.402877688, 0)
 Speeed.Size = UDim2.new(0, 87, 0, 32)
 Speeed.ZIndex = 0
 Speeed.Font = Enum.Font.SourceSans
-Speeed.Text = "Speed:"
+Speeed.Text = "السرعه:"
 Speeed.TextColor3 = Color3.fromRGB(255, 255, 255)
 Speeed.TextScaled = true
 Speeed.TextSize = 14.000
@@ -1222,7 +1388,7 @@ Stat.BorderSizePixel = 0
 Stat.Position = UDim2.new(0.299983799, 0, 0.239817441, 0)
 Stat.Size = UDim2.new(0, 85, 0, 15)
 Stat.Font = Enum.Font.SourceSans
-Stat.Text = "Status:"
+Stat.Text = "الحاله"
 Stat.TextColor3 = Color3.fromRGB(255, 255, 255)
 Stat.TextScaled = true
 Stat.TextSize = 14.000
@@ -1235,7 +1401,7 @@ Stat2.BorderSizePixel = 0
 Stat2.Position = UDim2.new(0.546535194, 0, 0.239817441, 0)
 Stat2.Size = UDim2.new(0, 27, 0, 15)
 Stat2.Font = Enum.Font.SourceSans
-Stat2.Text = "Off"
+Stat2.Text = "مطفئ"
 Stat2.TextColor3 = Color3.fromRGB(255, 0, 0)
 Stat2.TextScaled = true
 Stat2.TextSize = 14.000
@@ -1249,7 +1415,7 @@ Unfly.Position = UDim2.new(0.0759493634, 0, 0.705797076, 0)
 Unfly.Size = UDim2.new(0, 199, 0, 32)
 Unfly.Visible = false
 Unfly.Font = Enum.Font.SourceSans
-Unfly.Text = "Disable"
+Unfly.Text = "اطفاء"
 Unfly.TextColor3 = Color3.fromRGB(255, 255, 255)
 Unfly.TextScaled = true
 Unfly.TextSize = 14.000
@@ -1257,7 +1423,7 @@ Unfly.TextWrapped = true
 Unfly.MouseButton1Click:Connect(function()
 	local HumanoidRP = game.Players.LocalPlayer.Character.HumanoidRootPart
 	Fly.Visible = true
-	Stat2.Text = "Off"
+	Stat2.Text = "مطفئ"
 	Stat2.TextColor3 = Color3.fromRGB(255, 0, 0)
 	wait()
 	Unfly.Visible = false
@@ -1272,7 +1438,7 @@ Vfly.BackgroundColor3 = Color3.fromRGB(0, 150, 191)
 Vfly.BorderSizePixel = 0
 Vfly.Size = UDim2.new(0, 57, 0, 27)
 Vfly.Font = Enum.Font.SourceSans
-Vfly.Text = "Car fly"
+Vfly.Text = "طيران السياره"
 Vfly.TextColor3 = Color3.fromRGB(255, 255, 255)
 Vfly.TextScaled = true
 Vfly.TextSize = 14.000
@@ -1453,10 +1619,8 @@ end)
     end
 })
 
-CarTab:AddParagraph({"Note", "By activating this you can fly with your car"})
-
 -- Spam Cars Section
-local SpamCarSection = CarTab:AddSection({"Spam Car"})
+local SpamCarSection = CarTab:AddSection({"سبام سيارات"})
 
 local carList = {
     "SchoolBus", "SmartCar", "FarmTruck", "Cadillac", "Excavator",
@@ -1475,7 +1639,7 @@ local function spawnCar(carName)
 end
 
 CarTab:AddToggle({
-    Name = "Spam Cars",
+    Name = "سبام سيارات",
     Default = false,
     Callback = function(state)
         spamCarsActive = state
@@ -1492,8 +1656,6 @@ CarTab:AddToggle({
         end
     end
 })
-
-CarTab:AddParagraph({"Information:", "Spam multiple cars"})
 
 
 
@@ -1513,10 +1675,140 @@ end
 -- Inicializa a lista de players
 updatePlayerList()
 
+CarTab:AddButton({
+    Name = "ازاله جميع السيارات",
+    Callback = function()
+        local ofnawufn = false
+
+if ofnawufn == true then
+    return
+end
+ofnawufn = true
+
+local cawwfer = "MilitaryBoatFree" -- Alterado para MilitaryBoatFree
+local oldcfffff = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(1754, -2, 58) -- Coordenadas atualizadas
+wait(0.3)
+
+local args = {
+    [1] = "PickingBoat", -- Alterado para PickingBoat
+    [2] = cawwfer
+}
+
+game:GetService("ReplicatedStorage").RE:FindFirstChild("1Ca1r"):FireServer(unpack(args))
+wait(1)
+
+local wrinfjn
+for _, errb in pairs(game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"]:GetDescendants()) do
+    if errb:IsA("VehicleSeat") then
+        wrinfjn = errb
+    end
+end
+
+repeat
+    if game.Players.LocalPlayer.Character.Humanoid.Health == 0 then return end
+    if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
+        if not game.Players.LocalPlayer.Character.Humanoid.SeatPart == wrinfjn then
+            game.Players.LocalPlayer.Character.Humanoid.Sit = false
+        end
+    end
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame
+    task.wait()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame + Vector3.new(0,1,0)
+    task.wait()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = wrinfjn.CFrame + Vector3.new(0,-1,0)
+    task.wait()
+until game.Players.LocalPlayer.Character.Humanoid.SeatPart == wrinfjn
+
+for _, wifn in pairs(game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"]:GetDescendants()) do
+    if wifn.Name == "PhysicalWheel" then
+        wifn:Destroy()
+    end
+end
+
+local FLINGED = Instance.new("BodyThrust", game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass) 
+FLINGED.Force = Vector3.new(50000, 0, 50000) 
+FLINGED.Name = "FLING"
+FLINGED.Location = game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.Position
+
+for _, wvwvwasc in pairs(game.workspace.Vehicles:GetChildren()) do
+    for _, ascegr in pairs(wvwvwasc:GetDescendants()) do
+        if ascegr.Name == "VehicleSeat" then
+            local targetcar = ascegr
+            local tet = Instance.new("BodyVelocity", game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass)
+            tet.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+            tet.P = 1250
+            tet.Velocity = Vector3.new(0,0,0)
+            tet.Name = "#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"
+            for m=1,25 do
+                local pos = {x=0, y=0, z=0}
+                pos.x = targetcar.Position.X
+                pos.y = targetcar.Position.Y
+                pos.z = targetcar.Position.Z
+                pos.x = pos.x + targetcar.Velocity.X / 2
+                pos.y = pos.y + targetcar.Velocity.Y / 2
+                pos.z = pos.z + targetcar.Velocity.Z / 2
+                if pos.y <= -200 then
+                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(0,1000,0)
+                else
+                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z))
+                    task.wait()
+                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) + Vector3.new(0,-2,0)
+                    task.wait()
+                    game.workspace.Vehicles[game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) * CFrame.new(0,0,2)
+                    task.wait()
+                    game.workspace.Vehicles[
+game.Players.LocalPlayer.Name.."Car"].Chassis.Mass.CFrame = CFrame.new(Vector3.new(pos.x,pos.y,pos.z)) * CFrame.new(2,0,0)
+                    task.wait()
+                end
+                task.wait()
+            end
+        end
+    end
+end
+
+task.wait()
+local args = {
+    [1] = "DeleteAllVehicles"
+}
+
+game:GetService("ReplicatedStorage").RE:FindFirstChild("1Ca1r"):FireServer(unpack(args))
+game.Players.LocalPlayer.Character.Humanoid.Sit = false
+wait()
+local tet = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
+tet.MaxForce = Vector3.new(math.huge,math.huge,math.huge)
+tet.P = 1250
+tet.Velocity = Vector3.new(0,0,0)
+tet.Name = "#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"
+wait(0.1)
+for m=1,2 do 
+    task.wait()
+    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcfffff
+end
+wait(1)
+game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcfffff
+wait()
+game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("#mOVOOEPF$#@F$#GERE..>V<<<<EW<V<<W"):Destroy()
+wait(0.2)
+ofnawufn = false
+    end
+})
+
+CarTab:AddParagraph({"ملاحظه:", "ازاله جميع السيارات يقوم بازاله جميع السيارات التي في الماب"})
+
+CarTab:AddButton({
+    Name = "سحب جميع السيارات",
+    Callback = function()
+        for _, v in next, workspace.Vehicles:GetChildren() do
+            v:SetPrimaryPartCFrame(game.Players.LocalPlayer.Character:GetPrimaryPartCFrame())
+        end
+    end
+})
+
+CarTab:AddParagraph({"ملاحظه:", "سحب جميع السيارات يقوم بسحب جميع السيارات التي في الماب"})
+
+
 local Tab = Window:MakeTab({ Title = "التخريب", Icon = "rbxassetid://10734962068" })
-
-
-local Tab = Window:MakeTab({ Title = "التخريب V2", Icon = "rbxassetid://10734962068" })
 
 
 local Players = game:GetService("Players")
@@ -1930,7 +2222,7 @@ local function KillWithCouch()
     ReplicatedStorage.RE["1Clea1rTool1s"]:FireServer("ClearAllTools")
 end
 
-    local PlayerSection = Tab:AddSection({ Name = "Troll Player" })
+    local PlayerSection = Tab:AddSection({ Name = "" })
 
     -- Função para obter lista de jogadores
     local function getPlayerList()
@@ -1945,7 +2237,7 @@ end
     end
 
     local killDropdown = Tab:AddDropdown({
-        Name = "Choose Target",
+        Name = "اختار لاعب",
         Options = getPlayerList(),
         Default = "",
         Callback = function(value)
@@ -1956,7 +2248,7 @@ end
     })
 
     Tab:AddButton({
-        Name = "Refresh Player List",
+        Name = "نحديث القائمه",
         Callback = function()
             local tablePlayers = Players:GetPlayers()
             local newPlayers = {}
@@ -1982,7 +2274,7 @@ end
 
    
     Tab:AddButton({
-        Name = "Teleport to Player",
+        Name = "الانتقال للاعب",
         Callback = function()
             if not selectedPlayerName or not Players:FindFirstChild(selectedPlayerName) then
                 print("Error: Player not selected or does not exist")
@@ -2007,7 +2299,7 @@ end
     
     
     Tab:AddToggle({
-        Name = "View",
+        Name = "رؤيه الاعب",
         Default = false,
         Callback = function(value)
             local Camera = workspace.CurrentCamera
@@ -2051,7 +2343,7 @@ local espNames = {}
 local espConnection1, espConnection2, updateLoop
 
 Tab:AddToggle({
-    Name = "ESP",
+    Name = "كشف",
     Default = false,
     Callback = function(value)
         local function CreateNameTag(player)
@@ -2137,11 +2429,11 @@ Tab:AddToggle({
 })
 
 
-    local MethodSection = Tab:AddSection({ Name = "Métodos" })
+    local MethodSection = Tab:AddSection({ Name = "" })
 
     Tab:AddDropdown({
-        Name = "Select Method To Kill",
-        Options = {"Bus", "Couch", "Couch Without Going to the Target [BETA]"},
+        Name = "اختار طريقه القتل",
+        Options = {"باص", "كنبه", "كنبه دون الذهاب للاعب [BETA]"},
         Default = "",
         Callback = function(value)
             methodKill = value
@@ -2150,7 +2442,7 @@ Tab:AddToggle({
     })
 
     Tab:AddButton({
-        Name = "Kill Player",
+        Name = "قتل الاعب",
         Callback = function()
             if not selectedPlayerName or not Players:FindFirstChild(selectedPlayerName) then
                 print("Error: Player not selected or does not exist")
@@ -2254,7 +2546,7 @@ Tab:AddToggle({
     })
 
     Tab:AddButton({
-        Name = "Pull Player",
+        Name = "وقع الاعب",
         Callback = function()
             if not selectedPlayerName or not Players:FindFirstChild(selectedPlayerName) then
                 print("Error: Player not selected or does not exist")
@@ -2510,7 +2802,7 @@ local function houseBanKill()
 end
 
 Tab:AddButton({
-    Name = "House Ban Kill",
+    Name = "قتل طرد بيت",
     Callback = houseBanKill
 })
 
@@ -2522,7 +2814,7 @@ local viewing = false
 local flingActive = false
 
 Tab:AddToggle({
-    Name = "Auto Fling ",
+    Name = "اوتو فلينق",
     Default = false,
     Callback = function(state)
 
@@ -2684,7 +2976,7 @@ end
 end
 
 Tab:AddButton({
-    Name = "Fling Ball",
+    Name = "فلينق كره",
     Callback = function()
         FlingBall(game:GetService("Players")[selectedPlayerName])
     end
@@ -2784,7 +3076,7 @@ end
 
 -- Botão para usar na MI HUB
 Tab:AddButton({
-    Name = "Fling Ball v2",
+    Name = "فلينق كره",
     Callback = function()
         -- Usar selectedPlayerName da sua hub pra pegar o alvo
         local Players = game:GetService("Players")
@@ -2999,7 +3291,7 @@ local function ActiveAutoFling(targetPlayer)
 end
 
 Tab:AddButton({
-  Name = "FE Doors Flinger",
+  Name = "فلينق ابواب من خلال الضغط على الاعب",
   Callback = function()
 local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -3140,10 +3432,10 @@ end)
   end
 })
 
-local kill = Tab:AddSection({Name = "Fling Boat"})
+local kill = Tab:AddSection({Name = "فينق قارب"})
 
 Tab:AddButton({
-    Name = "Fling - Boat",
+    Name = "فلينق - قارب",
     Callback = function()
         if not selectedPlayerName or not game.Players:FindFirstChild(selectedPlayerName) then
             warn("No target selected.")
@@ -3248,7 +3540,7 @@ Tab:AddButton({
 print("Fling - Boat button created")
 
 Tab:AddButton({
-    Name = "Turn Off Fling - Boat",
+    Name = "توقيف فلينق - القارب",
     Callback = function()
         local Player = game.Players.LocalPlayer
         local Character = Player.Character
@@ -3307,10 +3599,10 @@ Tab:AddButton({
     end
 })
 
-local kill = Tab:AddSection({Name = "All methods"})
+local kill = Tab:AddSection({Name = "قتل الجميع و بكل الطرائق"})
 
 Tab:AddButton({
-    Name = "Kill All Bus",
+    Name = "قتل الجميع باص",
     Callback = function()
         local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
@@ -3447,7 +3739,7 @@ PerformActionForAllPlayers(Players:GetPlayers())
 print("Kill All Bus button created")
 
 Tab:AddButton({
-    Name = "House Ban kill All",
+    Name = "قتل الجميع طرد بيت",
     Callback = function()
         local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
@@ -3617,7 +3909,7 @@ end
 print("House Ban kill All button created")
 
 Tab:AddButton({
-    Name = "Fling Boat all",
+    Name = "فلينق الجميع قارب",
     Callback = function()
         local Player = game.Players.LocalPlayer
     local Character = Player.Character
@@ -3723,7 +4015,7 @@ Tab:AddButton({
 print("Fling Boat All button created")
 
 Tab:AddButton({
-    Name = "Auto Fling All",
+    Name = "اوتو فلينق الجميع",
     Callback = function()
     local Players = game:GetService("Players")
     local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -3824,7 +4116,7 @@ task.wait(0.25)
 })
 
 Tab:AddButton({
-    Name = "Bring All Couch [melhor]",
+    Name = "سحب الجميع كنبه [افضل]",
     Callback = function()
         local args = {
     [1] = "ClearAllTools"
@@ -4048,7 +4340,7 @@ end
 print("Bring All Couch button created")
 
 Tab:AddButton({
-    Name = "Kill All Couch [melhor]",
+    Name = "قتل الجميع كنبه [افضل]",
     Callback = function()
         local args = {
     [1] = "ClearAllTools"
@@ -4298,7 +4590,7 @@ end)
 print("Kill All Couch button created")  
 
 Tab:AddButton({
-    Name = "Fling Ball all",
+    Name = "فلينق الجميع كره",
     Callback = function()
 local player=game:GetService("Players").LocalPlayer
 local SoccerBalls=workspace.WorkspaceCom["001_SoccerBalls"]
@@ -4373,9 +4665,93 @@ workspace.CurrentCamera.CameraSubject=game.Players.LocalPlayer.Character:WaitFor
   end
 })
 
-local Tab = Window:MakeTab({"Avatar", "rbxassetid://10734952036"})
+Section = LocalPlayerTab:AddSection({
+    Name = "جلوس على الراس"
+})
 
-Tab:AddSection({ Name = "Copy Skin" })
+local selectedHeadSit = nil
+local headSitConnection = nil
+
+local headSitDropdown = LocalPlayerTab:AddDropdown({
+    Name = "اختار لاعب",
+    Default = "",
+    Options = players,
+    Callback = function(Value)
+        selectedHeadSit = Value
+    end
+})
+
+LocalPlayerTab:AddToggle({
+    Name = "جلوس على راسه",
+    Default = false,
+    Callback = function(bool)
+        local player = game.Players.LocalPlayer
+        local character = player.Character or player.CharacterAdded:Wait()
+        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+        local humanoid = character:WaitForChild("Humanoid")
+
+        if not selectedHeadSit or selectedHeadSit == "" then
+            warn("Nenhum jogador selecionado para Head Sit!")
+            return false
+        end
+
+        local selectedPlayer = game.Players:FindFirstChild(selectedHeadSit)
+
+        if bool then
+            if selectedPlayer and selectedPlayer.Character then
+                humanoid.Sit = true
+
+                if headSitConnection then
+                    headSitConnection:Disconnect()
+                end
+
+                headSitConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                    if selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("Head") and humanoid.Sit then
+                        local targetHead = selectedPlayer.Character.Head
+                        humanoidRootPart.CFrame = targetHead.CFrame * CFrame.Angles(0, 0, 0) * CFrame.new(0, 1.6, 0.4)
+                    else
+                        if headSitConnection then
+                            headSitConnection:Disconnect()
+                            headSitConnection = nil
+                            humanoid.Sit = false
+                        end
+                    end
+                end)
+            else
+                warn("Jogador selecionado não encontrado ou sem Character!")
+                return false
+            end
+        else
+            if headSitConnection then
+                headSitConnection:Disconnect()
+                headSitConnection = nil
+            end
+            humanoid.Sit = false
+        end
+    end
+})
+
+LocalPlayerTab:AddButton({
+    Name = "تحديث القائمه",
+    Callback = function()
+        local updatedPlayers = updatePlayerList()
+        if headSitDropdown and updatedPlayers then
+            pcall(function()
+                headSitDropdown:Refresh(updatedPlayers)
+            end)
+            if selectedHeadSit and not game.Players:FindFirstChild(selectedHeadSit) then
+                selectedHeadSit = nil
+                pcall(function()
+                    headSitDropdown:Set("")
+                end)
+            end
+        end
+    end
+})
+
+local Tab = Window:MakeTab({"السكنات", "rbxassetid://10734952036"})
+
+Tab:AddSection({ Name = "نسخ السكن" })
 
 
 
@@ -4410,7 +4786,7 @@ end
 local Target = ""
 
 local Dropdown = Tab:AddDropdown({
-    Name = "Choose Player",
+    Name = "اختار الاعب",
     Options = GetPlayerNames(),
     Default = Target,
     Callback = function(Value)
@@ -4419,7 +4795,7 @@ local Dropdown = Tab:AddDropdown({
 })
 
 Tab:AddButton({
-    Name = "Refresh Player List",
+    Name = "تحديث القائمه",
     Callback = function()
         if Dropdown then
             Dropdown:Set(GetPlayerNames())
@@ -4431,7 +4807,7 @@ Tab:AddButton({
 
 
 Tab:AddButton({
-    Name = "Copy Avatar",
+    Name = "نسخ السكن",
     Callback = function()
         if not Target then return end
 
@@ -4609,10 +4985,10 @@ Tab:AddToggle({
     end
 })
 
-Tab:AddSection({ "Invisible Section" })
+Tab:AddSection({ "" })
 
 Tab:AddButton({
-    Name = "Invisible",
+    Name = "سكن مخفي",
 Callback = function()
         
         local args = {
@@ -4705,10 +5081,10 @@ local function toggleHouseRGB(state)
     end
 end
 
-local Tab = Window:MakeTab({"Audio All", "music"})
+local Tab = Window:MakeTab({"الاصوات", "music"})
 
 -- Create a section
-Tab:AddSection({"Audio All Players"})
+Tab:AddSection({"اصوات لجميع الاعبين"})
 
 -- Lista de áudios
 local audios = {
@@ -4758,9 +5134,9 @@ local selectedAudioID
 
 -- Adicionar uma textbox para inserir o ID do áudio
 Tab:AddTextBox({
-    Name = "Enter Audio or Music ID",
-    Description = "Digite o ID do áudio",
-    PlaceholderText = "ID do áudio",
+    Name = "كود الاغنيه",
+    Description = "",
+    PlaceholderText = "ادخل الكود هنا",
     Callback = function(value)
         selectedAudioID = tonumber(value)
     end
@@ -4773,8 +5149,8 @@ for _, audio in ipairs(audios) do
 end
 
 Tab:AddDropdown({
-    Name = "Select Audio",
-    Description = "Choose an audio from the list",
+    Name = "اختار الاغنيه",
+    Description = "",
     Options = audioNames,
     Default = audioNames[1],
     Flag = "selected_audio",
@@ -4792,7 +5168,7 @@ Tab:AddDropdown({
 local audioLoop = false
 
 -- Nova seção para loop de áudio
-Tab:AddSection({"Audio on Loop"})
+Tab:AddSection({""})
 
 -- Função para tocar o áudio repetidamente
 local function playLoopedAudio()
@@ -4821,8 +5197,8 @@ end
 
 -- Toggle para loop de áudio
 Tab:AddToggle({
-    Name = "Loop Play Audio",
-    Description = "Activate the audio loop",
+    Name = "تشغيل الاغنيه تلقائيا",
+    Description = "",
     Default = false,
     Flag = "audio_loop",
     Callback = function(value)
@@ -4833,42 +5209,11 @@ Tab:AddToggle({
     end
 })
 
--- Adicionar um parágrafo como label
-Tab:AddParagraph({"Info", "Audio Play Loop (All Server Players Hear)"})
-
--- Função para tocar o áudio normal
-local function playAudio()
-    if selectedAudioID then
-        local args = {
-            [1] = game:GetService("Workspace"),
-            [2] = selectedAudioID,
-            [3] = 1,
-        }
-        game:GetService("ReplicatedStorage").RE:FindFirstChild("1Gu1nSound1s"):FireServer(unpack(args))
-
-        -- Criar e tocar o áudio
-        local sound = Instance.new("Sound")
-        sound.SoundId = "rbxassetid://" .. selectedAudioID
-        sound.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart
-        sound:Play()
-    else
-        warn("no audio selected.")
-    end
-end
-
-Tab:AddSection({"BoomBox"})
-Tab:AddButton({
-    Name = "FE BoomBox",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/d3uKY85d"))()
-    end
-})
-
 -- Nova seção para tocar áudio
-Tab:AddSection({"Play Audio"})
+Tab:AddSection({""})
 
 -- Botão para tocar o áudio
-Tab:AddButton({"Play Audio", function()
+Tab:AddButton({"تشغيل الاغنيه", function()
     playAudio()
 end})
 
@@ -4922,8 +5267,8 @@ end
 
 -- Toggle para "Estorar ouvido de geral"
 Tab:AddToggle({
-    Name = "Pop everyone's ear LOL",
-    Description = "Play audio repeatedly for everyone",
+    Name = "اقوى صوت ازعاج",
+    Description = "",
     Default = false,
     Flag = "audio_spam",
     Callback = function(value)
@@ -4939,116 +5284,14 @@ Tab:AddToggle({
     end
 })
 
-Tab:AddParagraph({"Info", "Everyone on the server hears the audio"})
-
-
-local Tab = Window:MakeTab({"Name", "Paper"})
-
-local isNameActive = false
-local isBioActive = false
-
-local SectionRGBName = Tab:AddSection({
-    Name = "Name RGB"
-})
-
-Tab:AddToggle({
-    Name = "Name RGB",
-    Description = "Enable Name RGB",
-    Default = false,
-    Callback = function(value)
-        isNameActive = value
-        print(value and "RGB Name enabled" or "RGB Name desactivated")
-    end
-})
-
-
-local SectionRGBBio = Tab:AddSection({
-    Name = "RGB BIO"
-})
-
-Tab:AddToggle({
-    Name = "RGB BIO",
-    Description = "enable RGB BIO.",
-    Default = false,
-    Callback = function(value)
-        isBioActive = value
-        print(value and "RGB BIO Enabled" or "RGB BIO desactivated")
-    end
-})
-
-
-local vibrantColors = {
-    Color3.fromRGB(255, 0, 0),   -- Vermelho
-    Color3.fromRGB(0, 255, 0),   -- Verde
-    Color3.fromRGB(0, 0, 255),   -- Azul
-    Color3.fromRGB(255, 255, 0), -- Amarelo
-    Color3.fromRGB(255, 0, 255), -- Magenta
-    Color3.fromRGB(0, 255, 255), -- Ciano
-    Color3.fromRGB(255, 165, 0), -- Laranja
-    Color3.fromRGB(128, 0, 128), -- Roxo
-    Color3.fromRGB(255, 20, 147) -- Rosa choque
-}
-
-spawn(function()
-    while true do
-        if isNameActive then
-            local randomColor = vibrantColors[math.random(#vibrantColors)]
-            local args = {
-                [1] = "PickingRPNameColor",
-                [2] = randomColor
-            }
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1RPNam1eColo1r"):FireServer(unpack(args))
-        end
-        wait(0.7)
-    end
-end)
-
-spawn(function()
-    while true do
-        if isBioActive then
-            local randomColor = vibrantColors[math.random(#vibrantColors)]
-            local args = {
-                [1] = "PickingRPBioColor",
-                [2] = randomColor
-            }
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1RPNam1eColo1r"):FireServer(unpack(args))
-        end
-        wait(0.7)
-    end
-end)
-
-local SectionNames = Tab:AddSection({
-    Name = "Add Names to Player"
-})
-
-local names = {
-    {"Anonymus", " Anonymus "},
-    {"KILLER", " KILLER "},
-    {"ERR0R_666", " ERR0R_666 "},
-    {"MI TEAM", " MI TEAM "},
-    {"GHOST", " GHOST "},
-    {"JOKER", " JOKER "},
-    {"ADMIN", " ADMIN "},
-    {"TUBERS93", " TUBERS93 "},
-    {"C00LKID", " C00LKID "},
-    {"GAME ATTACKED BY MI TEAM", " GAME ATTACKED BY MI TEAM "}
-}
-
-for _, name in ipairs(names) do
-    Tab:AddButton({
-        Name = "Name: " .. name[1],
-        Callback = function()
-            game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", name[2])
-        end
-    })
-end
+Tab:AddParagraph({"تحذير:", "اخفض الصوت قبل التشغيل"})
 
 
 -- Aba Child
-local ChildTab = Window:MakeTab({"Child", "baby"})
+local ChildTab = Window:MakeTab({"الطفل", "baby"})
 
 local Section = ChildTab:AddSection({
-    Name = "Child"
+    Name = "الطفل"
 })
 
 local Players = game:GetService("Players")
@@ -5068,7 +5311,7 @@ local function updatePlayerList()
 end
 
 local playerChild = ChildTab:AddDropdown({
-    Name = "Select a player to chase",
+    Name = "اختار لاعب",
     Options = updatePlayerList(),  -- Inicializa com lista atualizada
     Default = "",
     Callback = function(selected)
@@ -5081,7 +5324,7 @@ local playerChild = ChildTab:AddDropdown({
 })
 
 ChildTab:AddButton({
-    Name = "Refresh Player List",
+    Name = "تحديث القائمه",
     Callback = function()
         local updatedPlayers = updatePlayerList()
         if playerChild and updatedPlayers then
@@ -5129,7 +5372,7 @@ game.Players.PlayerRemoving:Connect(function(player)
 end)
 
 ChildTab:AddButton({
-    Name = "Send child",
+    Name = "ارسال الطفل",
     Callback = function()
         if not chasingplayer then
             warn("Nenhum jogador selecionado!")
@@ -5181,7 +5424,7 @@ ChildTab:AddButton({
 })
 
 ChildTab:AddButton({
-    Name = "Return child",
+    Name = "ارجاع الطفل",
     Callback = function()
         if rawget(getgenv(), "RunService") then
             getgenv().RunService:Disconnect()
@@ -5207,7 +5450,7 @@ ChildTab:AddButton({
 })
 
 ChildTab:AddToggle({
-    Name = "View Player",
+    Name = "رؤيه الاعب",
     Default = false,
     Callback = function(Value)
         local Players = game:GetService("Players")
@@ -5247,348 +5490,34 @@ ChildTab:AddToggle({
     end
 })
 
--- Aba Local Player
-local LocalPlayerTab = Window:MakeTab({"Local Player", "user"})
-
-local Section = LocalPlayerTab:AddSection({
-    Name = "Speed, Gravity and Jumping"
-})
-
-LocalPlayerTab:AddTextBox({
-    Name = "Player Speed",
-    PlaceholderText = "Enter the speed",
-    Callback = function(value)
-        local speed = tonumber(value)
-        if speed and pl.Character and pl.Character:FindFirstChild("Humanoid") then
-            pl.Character.Humanoid.WalkSpeed = speed
-        else
-            warn("Velocidade inválida ou personagem não encontrado!")
-        end
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Reset Speed",
-    Callback = function()
-        if pl.Character and pl.Character:FindFirstChild("Humanoid") then
-            pl.Character.Humanoid.WalkSpeed = 16
-        end
-    end
-})
-
-LocalPlayerTab:AddTextBox({
-    Name = "Jump Size",
-    PlaceholderText = "Enter jump height",
-    Callback = function(value)
-        local jumpHeight = tonumber(value)
-        if jumpHeight and pl.Character and pl.Character:FindFirstChild("Humanoid") then
-            pl.Character.Humanoid.JumpPower = jumpHeight
-        else
-            warn("Altura de pulo inválida ou personagem não encontrado!")
-        end
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Reset Jump",
-    Callback = function()
-        if pl.Character and pl.Character:FindFirstChild("Humanoid") then
-            pl.Character.Humanoid.JumpPower = 50
-        end
-    end
-})
-
-LocalPlayerTab:AddTextBox({
-    Name = "Gravity",
-    PlaceholderText = "Enter Gravity",
-    Callback = function(value)
-        local gravity = tonumber(value)
-        if gravity then
-            workspace.Gravity = gravity
-        else
-            warn("Gravidade inválida!")
-        end
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Reset Gravity",
-    Callback = function()
-        workspace.Gravity = 196.2
-    end
-})
-
--- Tab 4: Anti Sit
-Tab:AddSection({ "مضاد جلوس" })
-Tab:AddToggle({
-    Name = "مضاد جلوس",
-    Description = "",
-    Default = false,
-    Callback = function(Value)
-        local player = game.Players.LocalPlayer
-        local connections = {}
-        local runService = game:GetService("RunService")
-
-
-        local function preventSitting(humanoid)
-            if humanoid then
-                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-                local sitConnection = humanoid.StateChanged:Connect(function(_, newState)
-                    if newState == Enum.HumanoidStateType.Seated then
-                        humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
-                    end
-                end)
-                table.insert(connections, sitConnection)
-            end
-        end
-
-
-        local function monitorCharacter()
-            local function onCharacterAdded(character)
-                local humanoid = character:WaitForChild("Humanoid")
-                preventSitting(humanoid)
-            end
-
-
-            local characterAddedConnection = player.CharacterAdded:Connect(onCharacterAdded)
-            table.insert(connections, characterAddedConnection)
-
-
-            if player.Character then
-                onCharacterAdded(player.Character)
-            end
-        end
-
-
-        local function resetSitting()
-            for _, connection in ipairs(connections) do
-                connection:Disconnect()
-            end
-            connections = {}
-            local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
-            end
-        end
-
-
-        if Value then
-            monitorCharacter()
-            local heartbeatConnection = runService.Heartbeat:Connect(function()
-                local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-                if humanoid then
-                    humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
-                end
-            end)
-            table.insert(connections, heartbeatConnection)
-        else
-            resetSitting()
-        end
-    end
-})
-
-Section = LocalPlayerTab:AddSection({
-    Name = "Spam Chat"
-})
-
-local TextSave
-local tcs = game:GetService("TextChatService")
-local chat = tcs.ChatInputBarConfiguration and tcs.ChatInputBarConfiguration.TargetTextChannel
-
-function sendchat(msg)
-    if not msg or msg == "" then return end
-    if tcs.ChatVersion == Enum.ChatVersion.LegacyChatService then
-        local success, err = pcall(function()
-            game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
-        end)
-        if not success then
-            warn("Erro ao enviar chat: " .. err)
-        end
-    elseif chat then
-        local success, err = pcall(function()
-            chat:SendAsync(msg)
-        end)
-        if not success then
-            warn("Erro ao enviar chat: " .. err)
-        end
-    end
-end
-
-LocalPlayerTab:AddTextBox({
-    Name = "Enter text",
-    PlaceholderText = "Enter Message",
-    Callback = function(text)
-        TextSave = text
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Send Chat",
-    Callback = function()
-        sendchat(TextSave)
-    end
-})
-
-getgenv().ChaosHubEnviarDelay = 1
-
-LocalPlayerTab:AddSlider({
-    Name = "Delay to Spam",
-    Min = 0.4,
-    Max = 10,
-    Default = 1,
-    Increment = 0.1,
-    Callback = function(Value)
-        getgenv().ChaosHubEnviarDelay = Value
-    end
-})
-
-LocalPlayerTab:AddToggle({
-    Name = "Spam Chat",
-    Default = false,
-    Flag = "Spawn with texts",
-    Callback = function(Value)
-        getgenv().ChaosHubSpawnText = Value
-        while getgenv().ChaosHubSpawnText do
-            sendchat(TextSave)
-            task.wait(getgenv().ChaosHubEnviarDelay)
-        end
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Spam chat Hacked By MI TEAM",
-    Callback = function()
-        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Hacked by MI TEAM")
-        else 
-            print("Nadaa")
-    end
-end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Clear Chat",
-    Callback = function()
-        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg2\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Chat Cleared")
-        else 
-            print("Nadaa")
-    end
-end
-})
-
-Section = LocalPlayerTab:AddSection({
-    Name = "Headsit"
-})
-
-local selectedHeadSit = nil
-local headSitConnection = nil
-
-local headSitDropdown = LocalPlayerTab:AddDropdown({
-    Name = "Select Player",
-    Default = "",
-    Options = players,
-    Callback = function(Value)
-        selectedHeadSit = Value
-    end
-})
-
-LocalPlayerTab:AddToggle({
-    Name = "Head Sit",
-    Default = false,
-    Callback = function(bool)
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-        local humanoid = character:WaitForChild("Humanoid")
-
-        if not selectedHeadSit or selectedHeadSit == "" then
-            warn("Nenhum jogador selecionado para Head Sit!")
-            return false
-        end
-
-        local selectedPlayer = game.Players:FindFirstChild(selectedHeadSit)
-
-        if bool then
-            if selectedPlayer and selectedPlayer.Character then
-                humanoid.Sit = true
-
-                if headSitConnection then
-                    headSitConnection:Disconnect()
-                end
-
-                headSitConnection = game:GetService("RunService").Heartbeat:Connect(function()
-                    if selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("Head") and humanoid.Sit then
-                        local targetHead = selectedPlayer.Character.Head
-                        humanoidRootPart.CFrame = targetHead.CFrame * CFrame.Angles(0, 0, 0) * CFrame.new(0, 1.6, 0.4)
-                    else
-                        if headSitConnection then
-                            headSitConnection:Disconnect()
-                            headSitConnection = nil
-                            humanoid.Sit = false
-                        end
-                    end
-                end)
-            else
-                warn("Jogador selecionado não encontrado ou sem Character!")
-                return false
-            end
-        else
-            if headSitConnection then
-                headSitConnection:Disconnect()
-                headSitConnection = nil
-            end
-            humanoid.Sit = false
-        end
-    end
-})
-
-LocalPlayerTab:AddButton({
-    Name = "Refresh Table",
-    Callback = function()
-        local updatedPlayers = updatePlayerList()
-        if headSitDropdown and updatedPlayers then
-            pcall(function()
-                headSitDropdown:Refresh(updatedPlayers)
-            end)
-            if selectedHeadSit and not game.Players:FindFirstChild(selectedHeadSit) then
-                selectedHeadSit = nil
-                pcall(function()
-                    headSitDropdown:Set("")
-                end)
-            end
-        end
-    end
-})
-
-local Tab = Window:MakeTab({"Teleports", "tp"}) -- Nome do ícone: 'portal' em minúsculo para teleporte
+local Tab = Window:MakeTab({"التنقل", "tp"}) -- Nome do ícone: 'portal' em minúsculo para teleporte
 
 -- Botões de Teleporte
 local teleportButtons = {
-{"Free Premium", CFrame.new(-4, -134, 14)},
-{"Casa 28", CFrame.new(-100, 3, 1068)},
-{"Behind the Scenes", CFrame.new(192, 4, 272)},
-{"City Center", CFrame.new(136, 4, 117)},
-{"Crime Scene", CFrame.new(-119, -28, 235)},
-{"Deserted House", CFrame.new(986, 4, 63)},
-{"Agency Portal", CFrame.new(672, 4, -296)},
-{"Hideout", CFrame.new(505, -75, 143)},
-{"School", CFrame.new(-312, 4, 211)},
-{"Café Brook", CFrame.new(161, 8, 52)}, 
-{"Starting Point", CFrame.new(-26, 4, -23)},
-{"Main Arch", CFrame.new(-589, 141, -59)},
-{"Hospital", CFrame.new(-309, 4, 71)},
-{"Agency Base", CFrame.new(179, 4, -464)},
-{"Hidden Workshop Room", CFrame.new(0, 4, -495)},
-{"Secret Room 2", CFrame.new(-343, 4, -613)},
-{"Isolated Island", CFrame.new(-1925, 23, 127)},
-{"Hotel Square", CFrame.new(182, 4, 150)},
-{"Mountain 1", CFrame.new(-670, 251, 765)},
-{"Main Bank", CFrame.new(2.28, 4.65, 254.58)},
-{"Clothing Store", CFrame.new(-46.15, 4.65, 253.20)},
-{"Shelter", CFrame.new(-88.48, 22.05, 262.34)},
-{"Dental Clinic", CFrame.new(-53.58, 22.15, 265.61)},
-{"Coffee Shop", CFrame.new(-97.12, 4.65, 254.99)}
+{"نجمه مجانيه", CFrame.new(-4, -134, 14)},
+{"بيت 28", CFrame.new(-100, 3, 1068)},
+{"الفندق", CFrame.new(192, 4, 272)},
+{"مدخل ساحه الفنادق", CFrame.new(136, 4, 117)},
+{"المكان السري", CFrame.new(-119, -28, 235)},
+{"البيت المهجور / بيت صاحب ماب البيوت", CFrame.new(986, 4, 63)},
+{"مكان البوابه", CFrame.new(672, 4, -296)},
+{"تحت الماب", CFrame.new(505, -75, 143)},
+{"داخل المدرسه", CFrame.new(-312, 4, 211)},
+{"داخل المطعم", CFrame.new(161, 8, 52)}, 
+{"البدايه", CFrame.new(-26, 4, -23)},
+{"فوق القوس الذي بقرب حضيره الاحصنه", CFrame.new(-589, 141, -59)},
+{"داخل المستشفى", CFrame.new(-309, 4, 71)},
+{"مكان الطاقه", CFrame.new(179, 4, -464)},
+{"ورشه العمل المخفيه", CFrame.new(0, 4, -495)},
+{"تحت الجبل", CFrame.new(-343, 4, -613)},
+{"جزيره", CFrame.new(-1925, 23, 127)},
+{"امام الفندق", CFrame.new(182, 4, 150)},
+{"الجبل الثلجي", CFrame.new(-670, 251, 765)},
+{"داخل البنك", CFrame.new(2.28, 4.65, 254.58)},
+{"متجر الملابس", CFrame.new(-46.15, 4.65, 253.20)},
+{"متجر/تبني/الاعتناء بالحيوانات", CFrame.new(-88.48, 22.05, 262.34)},
+{"عياده", CFrame.new(-53.58, 22.15, 265.61)},
+{"الكوفي", CFrame.new(-97.12, 4.65, 254.99)}
 }
 
 for _, btn in ipairs(teleportButtons) do
@@ -5601,7 +5530,7 @@ for _, btn in ipairs(teleportButtons) do
 end
 
 
-local ToolsTab = Window:MakeTab({"Items", "backpack"})
+local ToolsTab = Window:MakeTab({"الابتمات", "backpack"})
 
 -- Tabela de cores
 local colorsTable = {
@@ -5617,7 +5546,7 @@ local colorsTable = {
 
 -- Botão para colorir o mapa
 ToolsTab:AddButton({
-    Name = "Coloring Floor Map [Very OP]",
+    Name = "تلوين ارضيه الماب",
     Callback = function()
       local toolselected = "PaintRoller"
 local dupeamot = 100
@@ -5674,9 +5603,9 @@ else
     wait(0.2)
     
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Mafia Hub Dupe",
-        Text = "Do not click on anything while the tools are being duplicated.",
-        Button1 = "Tendeu",
+        Title = "MT3ATI Hub Dupe",
+        Text = "لا تقوم بالنقر على اي اداه",
+        Button1 = "حسنا!",
         Duration = 3
     })
     
@@ -5811,7 +5740,7 @@ else
         game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Backpack
         game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Character
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Mafia Hub Tool",
+            Title = "MT3ATI Hub Tool",
             Text = "Tool Duped: " .. m .. " / " .. dupeamot,
             Duration = 1
         })
@@ -5914,7 +5843,7 @@ end
 })
 
 ToolsTab:AddButton({
-    Name = "Coloring Sky Map [Very OP]",
+    Name = "تلوين سماء الماب",
     Callback = function()
        local toolselected = "PaintRoller"
 local dupeamot = 100
@@ -5971,8 +5900,8 @@ else
     wait(0.2)
     
     game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "Mafia Hub Dupe",
-        Text = "Do not click on anything while the tools are being duplicated.",
+        Title = "MT3ATI Hub Dupe",
+        Text = "لا تقوم بالنقر على اي اداه",
         Button1 = "Tendeu",
         Duration = 3
     })
@@ -6108,7 +6037,7 @@ else
         game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Backpack
         game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Character
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Mafia Hub Tool",
+            Title = "MT3ATI Hub Tool",
             Text = "Tool Duped: " .. m .. " / " .. dupeamot,
             Duration = 1
         })
@@ -6267,8 +6196,8 @@ end
 
 -- Dropdown para selecionar a cor
 ToolsTab:AddDropdown({
-    Name = "Select Color",
-    Description = "Choose a color to apply",
+    Name = "اختار اللون",
+    Description = "اختار اللون الذي تريد وضعه",
     Options = (function()
         local colorNames = {}
         for _, color in ipairs(colorsTable) do
@@ -6321,89 +6250,14 @@ local function applyRGBCycle()
     end
 end
 
--- Botão para aplicar ciclo de cores
-ToolsTab:AddButton({
-    Name = "Colorful",
-    Callback = function()
-        equipAndUnequipTools(applyRGBCycle)
-    end
-})
-
--- Combinações de cores
-local colorCombinations = {}
-for i, color1 in ipairs(colorsTable) do
-    for j, color2 in ipairs(colorsTable) do
-        if i ~= j then
-            table.insert(colorCombinations, {Name = color1.Name .. " e " .. color2.Name, Colors = {color1.Color, color2.Color}})
-        end
-    end
-end
-
--- Dropdown para combinações de cores
-ToolsTab:AddDropdown({
-    Name = "Select Color Combination",
-    Description = "Select Color Combination",
-    Options = (function()
-        local combinationNames = {}
-        for _, combination in ipairs(colorCombinations) do
-            table.insert(combinationNames, combination.Name)
-        end
-        return combinationNames
-    end)(),
-    Default = colorCombinations[1].Name,
-    Callback = function(selected)
-        for _, combination in ipairs(colorCombinations) do
-            if combination.Name == selected then
-                local function applyDoubleColor()
-                    local LocalPlayer = game:GetService("Players").LocalPlayer
-                    local backpack = LocalPlayer.Backpack
-                    local character = LocalPlayer.Character
-                    local toolIndex = 0
-                    local colors = combination.Colors
-
-                    local function changeToolColor(tool, color)
-                        if tool:IsA("Tool") and tool.Name == "PaintRoller" then
-                            local SetColor = tool:FindFirstChild("SetColor", true)
-                            if SetColor then
-                                SetColor:FireServer(color)
-                            end
-                        end
-                    end
-
-                    for _, tool in ipairs(backpack:GetChildren()) do
-                        if tool.Name == "PaintRoller" then
-                            toolIndex = toolIndex + 1
-                            local color = colors[(toolIndex - 1) % 2 + 1]
-                            changeToolColor(tool, color)
-                        end
-                    end
-                    for _, tool in ipairs(character:GetChildren()) do
-                        if tool.Name == "PaintRoller" then
-                            toolIndex = toolIndex + 1
-                            local color = colors[(toolIndex - 1) % 2 + 1]
-                            changeToolColor(tool, color)
-                        end
-                    end
-                end
-                equipAndUnequipTools(applyDoubleColor)
-                break
-            end
-        end
-    end
-})
-
--- Referências aos remotes
-local cleartoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s")
-local picktoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l")
-
 -- Seção de controle de itens
 local Section = ToolsTab:AddSection({
-    Name = "Items Control"
+    Name = "التحكم بالايتمام"
 })
 
 -- Botão para limpar todas as ferramentas
 ToolsTab:AddButton({
-    Name = "Clear All Tools",
+    Name = "حذف جميع الايتمات",
     Callback = function()
         local args = {
             [1] = "ClearAllTools"
@@ -6412,14 +6266,9 @@ ToolsTab:AddButton({
     end
 })
 
--- Seção para equipar itens
-Section = ToolsTab:AddSection({
-    Name = "Equip Items"
-})
-
 -- Botão para equipar todos os itens
 ToolsTab:AddButton({
-    Name = "Equip all items",
+    Name = "اخذ جميع الايتمات",
     Callback = function()
         for _, tool in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
             if tool:IsA("Tool") then
@@ -6431,16 +6280,16 @@ ToolsTab:AddButton({
 
 -- Seção para Aura Grip
 Section = ToolsTab:AddSection({
-    Name = "Aura Grip"
+    Name = "القوى"
 })
 
 -- Botão para Couch Aura
 ToolsTab:AddButton({
-    Name = "Couch Aura",
+    Name = "قوه الكنبه",
     Callback = function()
     nametools = "Couch Spray lel"
                 oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="Dupe Script",Text="Please do not equip any tools or unequip tools or click tools on inventory. It will break the script.", Button1 = "I understand" ,Duration=5})
+game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
                 toolthatiwanttodupe = "Couch"
                 tools = "Couch"
                 if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
@@ -6640,11 +6489,11 @@ Vector3.new(0, 0, -15),
 
 -- Botão para Fire Aura
 ToolsTab:AddButton({
-    Name = "Fire Aura",
+    Name = "قوه النار",
     Callback = function()
         nametools = "fire Spray lel"
                 oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="Dupe Script",Text="Please do not equip any tools or unequip tools or click tools on inventory. It will break the script.", Button1 = "I understand" ,Duration=5})
+game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
                 toolthatiwanttodupe = "PaperbagFire"
                 tools = "PaperbagFire"
                 if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
@@ -6844,11 +6693,11 @@ Vector3.new(0, 0, -15),
 
 -- Botão para Water Aura
 ToolsTab:AddButton({
-    Name = "Water Aura",
+    Name = "قوه الماء",
     Callback = function()
         nametools = "water Spray lel"
                 oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="Dupe Script",Text="Please do not equip any tools or unequip tools or click tools on inventory. It will break the script.", Button1 = "I understand" ,Duration=5})
+game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار اانسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
                 toolthatiwanttodupe = "WateringCan"
                 tools = "WateringCan"
                 if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
@@ -7048,11 +6897,11 @@ Vector3.new(0, 0, -15),
 
 -- Botão para Light Aura
 ToolsTab:AddButton({
-    Name = "Light Aura",
+    Name = "قوه الضوء",
     Callback = function()
         nametools = "light Spray lel"
                 oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="Dupe Script",Text="Please do not equip any tools or unequip tools or click tools on inventory. It will break the script.", Button1 = "I understand" ,Duration=5})
+game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
                 toolthatiwanttodupe = "FlashLight"
                 tools = "FlashLight"
                 if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
@@ -7252,12 +7101,12 @@ Vector3.new(0, 0, -15),
 
 -- Botão para Smoke Aura
 ToolsTab:AddButton({
-    Name = "Smoke Aura",
+    Name = "قوه الدخان",
     Callback = function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Dupe Script",
-            Text = "Please do not equip any tools or unequip tools or click tools on inventory. It will break the script.",
-            Button1 = "I understand",
+            Title = "جار النسخ",
+            Text = "لا تقن بالنقر على اي اداه",
+            Button1 = "لقد فهمت!",
             Duration = 5
         })
         local args = {
@@ -7337,12 +7186,12 @@ ToolsTab:AddButton({
 
 -- Seção para D1ck Grip
 Section = ToolsTab:AddSection({
-    Name = "D1ck Grip"
+    Name = ""
 })
 
 -- Botão para Black D1ck
 ToolsTab:AddButton({
-    Name = "Black D1ck",
+    Name = "ز^ب اسود",
     Callback = function()
                         oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
                 toolthatiwanttodupe = "Box"
@@ -7555,7 +7404,7 @@ ToolsTab:AddButton({
     end
 })
 
-local funtab = Window:MakeTab({"Fun", "home"})
+local funtab = Window:MakeTab({"اخرى", "home"})
 
 -- Variável para guardar a posição original
 local posAnterior
@@ -7623,7 +7472,7 @@ end
 
 -- TextBox para definir quantidade
 funtab:AddTextBox({
-    Name = "Amount",
+    Name = "ضع عدد الكرات",
     PlaceholderText = tostring(ballsAmount),
     Callback = function(value)
         local n = tonumber(value)
@@ -7638,7 +7487,7 @@ funtab:AddTextBox({
 
 -- Toggle balls lopper
 funtab:AddToggle({
-    Name = "dupe balls",
+    Name = "نسخ الكرات",
     Default = false,
     Callback = function(state)
         toggles.LagLaptop = state
@@ -7671,7 +7520,7 @@ funtab:AddToggle({
 
 
 funtab:AddToggle({
-    Name = "balls looper",
+    Name = "اوتو نسخ كرات",
     Default = false,
     Callback = function(state)
         toggles.LagLaptop = state
@@ -7706,19 +7555,39 @@ funtab:AddToggle({
 })
 
 
-local UniversalTab = Window:MakeTab({"Others 2", "plane"})
+local Tab = Window:MakeTab({"الاسماء", "Paper"})
+
+
+
+local SectionNames = Tab:AddSection({
+    Name = "الاسماء"
+})
+
+local names = {
+    {"Anonymus", " Anonymus "},
+    {"KILLER", " KILLER "},
+    {"ERR0R_666", " ERR0R_666 "},
+    {"GHOST", " GHOST "},
+    {"JOKER", " JOKER "},
+    {"ADMIN", " ADMIN "},
+    {"TUBERS93", " TUBERS93 "},
+    {"C00LKID", " C00LKID "},
+}
+
+for _, name in ipairs(names) do
+    Tab:AddButton({
+        Name = "Name: " .. name[1],
+        Callback = function()
+            game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", name[2])
+        end
+    })
+end
+
+local UniversalTab = Window:MakeTab({"", "plane"})
 
 -- Seção para Scripts 
 Section = UniversalTab:AddSection({
     Name = "Scripts"
-})
-
--- Botão para coquette hub
-UniversalTab:AddButton({
-    Name = "coquette hub",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/Daivd977/Deivd999/refs/heads/main/pessal"))()
-    end
 })
 
 -- Botão para ShiftLock
@@ -7745,30 +7614,7 @@ UniversalTab:AddButton({
     end
 })
 
--- Botão para TP Tool
 UniversalTab:AddButton({
-    Name = "TP Tool",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/err0r129/KptHadesBlair/main/Bao.lua"))()
-    end
-})
-
--- Botão para Fly Gui
-UniversalTab:AddButton({
-    Name = "Fly Gui",
-    Callback = function()
-        loadstring(game:HttpGet("https://scriptblox.com/raw/Universal-Script-Fly-v3-7412"))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "Telekinesis",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/SAZXHUB/Control-update/main/README.md", true))()
-    end
-})
-
-Tab:AddButton({
     Name = "سكربت ثقب اسود",
     Description = "",
     Callback = function()
@@ -7920,8 +7766,7 @@ toggleBlackHole()
     end
 })
 
-Tab:AddSection({ "سحب الاشياء للاعب" })
-Tab:AddButton({
+UniversalTab:AddButton({
     Name = "سكربت سحب الاشياء للاعب",
     Description = "السكربت عباره عن سحب الابواب للاعب الذي تضع اسمه",
     Callback = function()
