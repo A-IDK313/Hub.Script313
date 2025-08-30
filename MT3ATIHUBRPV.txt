@@ -679,12 +679,8 @@ pcall(function()
     })
 end)
 
-
-
-
-
 -- Music Section
-local MusicSection = CarTab:AddSection({"اغاني للبيت"})
+local MusicSection = HouseTab:AddSection({"اغاني للبيت"})
 
 local musicIds = {
     "71373562243752", "138129019858244", "138480372357526", "122199933878670",
@@ -719,7 +715,7 @@ local function playHouseMusic(musicId)
     end
 end
 
-CarTab:AddTextBox({
+HouseTab:AddTextBox({
     Name = "كود الاغنيه",
     PlaceholderText = "ادخل كود الاغنيه",
     Callback = function(value)
@@ -727,17 +723,13 @@ CarTab:AddTextBox({
     end
 })
 
-CarTab:AddDropdown({
+HouseTab:AddDropdown({
     Name = "اختار الاغنيه (تحتاج لقيمباس)",
     Options = musicIds,
     Callback = function(value)
         playHouseMusic(value)
     end
 })
-
-
-
-
 
 pcall(function()
     HouseTab:AddSection({ Name = "الانتقال للبيوت" })
