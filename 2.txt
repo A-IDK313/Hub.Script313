@@ -1623,7 +1623,7 @@ loadstring(game:HttpGet("https://pastebin.com/raw/fgEZsxws"))()
     end
 })
 
-local Tab = Window:MakeTab({"الشات", Icon = ""})
+local Tab = Window:MakeTab({"سبام شات", Icon = ""})
 
 Section = Tab:AddSection({
     Name = "سبام شات"
@@ -1706,7 +1706,7 @@ Tab:AddButton({
 end
 })
 
-LocalPlayerTab:AddButton({
+Tab:AddButton({
     Name = "حذف الشات",
     Callback = function()
         if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
@@ -1717,6 +1717,7 @@ LocalPlayerTab:AddButton({
 end
 })
 
+local Tab = Window:MakeTab({"الشات", Icon = ""})
 
 
 -- SeÃ§Ã£o: Enviar uma mensagem normal
