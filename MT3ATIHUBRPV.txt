@@ -7850,98 +7850,6 @@ loadstring(game:HttpGet("https://pastebin.com/raw/fgEZsxws"))()
     end
 })
 
-Section = Tab:AddSection({
-    Name = "سبام شات"
-})
-
-local TextSave
-local tcs = game:GetService("TextChatService")
-local chat = tcs.ChatInputBarConfiguration and tcs.ChatInputBarConfiguration.TargetTextChannel
-
-function sendchat(msg)
-    if not msg or msg == "" then return end
-    if tcs.ChatVersion == Enum.ChatVersion.LegacyChatService then
-        local success, err = pcall(function()
-            game:GetService("ReplicatedStorage"):FindFirstChild("DefaultChatSystemChatEvents").SayMessageRequest:FireServer(msg, "All")
-        end)
-        if not success then
-            warn("Erro ao enviar chat: " .. err)
-        end
-    elseif chat then
-        local success, err = pcall(function()
-            chat:SendAsync(msg)
-        end)
-        if not success then
-            warn("Erro ao enviar chat: " .. err)
-        end
-    end
-end
-
-Tab:AddTextBox({
-    Name = "ضع الكلام",
-    PlaceholderText = "ادخل الكلام هنا",
-    Callback = function(text)
-        TextSave = text
-    end
-})
-
-Tab:AddButton({
-    Name = "سبام شات",
-    Callback = function()
-        sendchat(TextSave)
-    end
-})
-
-getgenv().ChaosHubEnviarDelay = 1
-
-Tab:AddSlider({
-    Name = "سرعه السبام",
-    Min = 0.4,
-    Max = 10,
-    Default = 1,
-    Increment = 0.1,
-    Callback = function(Value)
-        getgenv().ChaosHubEnviarDelay = Value
-    end
-})
-
-Tab:AddParagraph({"تحذير:", "يرجى عدم وضع السرعه على 0 و الا ستاخذ تحذير او بان"})
-
-Tab:AddToggle({
-    Name = "تفعيل السبام",
-    Default = false,
-    Flag = "Spawn with texts",
-    Callback = function(Value)
-        getgenv().ChaosHubSpawnText = Value
-        while getgenv().ChaosHubSpawnText do
-            sendchat(TextSave)
-            task.wait(getgenv().ChaosHubEnviarDelay)
-        end
-    end
-})
-
-Tab:AddButton({
-    Name = "سبام شات Hacked By DR4V3X HUB",
-    Callback = function()
-        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Hacked By DR4V3X HUB")
-        else 
-            print("Nadaa")
-    end
-end
-})
-
-Tab:AddButton({
-    Name = "حذف الشات",
-    Callback = function()
-        if game:GetService("TextChatService").ChatVersion == Enum.ChatVersion.TextChatService then 
-            game:GetService("TextChatService").TextChannels.RBXGeneral:SendAsync("msg2\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rServer: Chat Cleared")
-        else 
-            print("Nadaa")
-    end
-end
-})
-
 local Tab = Window:MakeTab({"سبام شات", Icon = ""})
 
 Section = Tab:AddSection({
@@ -8035,6 +7943,8 @@ Tab:AddButton({
     end
 end
 })
+
+local Tab = Window:MakeTab({"الشات", Icon = ""})
 
 
 -- SeÃ§Ã£o: Enviar uma mensagem normal
