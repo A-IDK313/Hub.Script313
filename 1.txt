@@ -7726,6 +7726,257 @@ end)
 })
 
 local Section = Tab:AddSection({
+	Name = "سكربت سحب اشياء"
+})
+
+Tab:AddButton({
+    Name = "سكربت سحب الاشياء للاعب",
+    Description = "السكربت عباره عن سحب الابواب للاعب الذي تضع اسمه",
+    Callback = function()
+        -- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
+local Gui = Instance.new("ScreenGui")
+local Main = Instance.new("Frame")
+local Box = Instance.new("TextBox")
+local UITextSizeConstraint = Instance.new("UITextSizeConstraint")
+local Label = Instance.new("TextLabel")
+local UITextSizeConstraint_2 = Instance.new("UITextSizeConstraint")
+local Button = Instance.new("TextButton")
+local UITextSizeConstraint_3 = Instance.new("UITextSizeConstraint")
+
+--Properties:
+
+Gui.Name = "Gui"
+Gui.Parent = gethui()
+Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+Main.Name = "Main"
+Main.Parent = Gui
+Main.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
+Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Main.BorderSizePixel = 0
+Main.Position = UDim2.new(0.335954279, 0, 0.542361975, 0)
+Main.Size = UDim2.new(0.240350261, 0, 0.166880623, 0)
+Main.Active = true
+Main.Draggable = true
+
+Box.Name = "Box"
+Box.Parent = Main
+Box.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Box.BorderSizePixel = 0
+Box.Position = UDim2.new(0.0980926454, 0, 0.218712583, 0)
+Box.Size = UDim2.new(0.801089942, 0, 0.364963502, 0)
+Box.FontFace = Font.new("rbxasset://fonts/families/SourceSansSemibold.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+Box.PlaceholderText = "اكتب اسم الاعب هنا"
+Box.Text = ""
+Box.TextColor3 = Color3.fromRGB(255, 255, 255)
+Box.TextScaled = true
+Box.TextSize = 31.000
+Box.TextWrapped = true
+
+UITextSizeConstraint.Parent = Box
+UITextSizeConstraint.MaxTextSize = 31
+
+Label.Name = "Label"
+Label.Parent = Main
+Label.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+Label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Label.BorderSizePixel = 0
+Label.Size = UDim2.new(1, 0, 0.160583943, 0)
+Label.FontFace = Font.new("rbxasset://fonts/families/Nunito.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
+Label.Text = "سحب الاشياء | Made by: DR4V3X"
+Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+Label.TextScaled = true
+Label.TextSize = 14.000
+Label.TextWrapped = true
+
+UITextSizeConstraint_2.Parent = Label
+UITextSizeConstraint_2.MaxTextSize = 21
+
+Button.Name = "Button"
+Button.Parent = Main
+Button.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
+Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Button.BorderSizePixel = 0
+Button.Position = UDim2.new(0.183284417, 0, 0.656760991, 0)
+Button.Size = UDim2.new(0.629427791, 0, 0.277372271, 0)
+Button.Font = Enum.Font.Nunito
+Button.Text = "سحب الاشياء | مطفئ"
+Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+Button.TextScaled = true
+Button.TextSize = 28.000
+Button.TextWrapped = true
+
+UITextSizeConstraint_3.Parent = Button
+UITextSizeConstraint_3.MaxTextSize = 28
+
+-- Scripts:
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local LocalPlayer = Players.LocalPlayer
+local UserInputService = game:GetService("UserInputService")
+local Workspace = game:GetService("Workspace")
+
+local character
+local humanoidRootPart
+
+mainStatus = true
+UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
+	if input.KeyCode == Enum.KeyCode.RightControl and not gameProcessedEvent then
+		mainStatus = not mainStatus
+		Main.Visible = mainStatus
+	end
+end)
+
+local Folder = Instance.new("Folder", Workspace)
+local Part = Instance.new("Part", Folder)
+local Attachment1 = Instance.new("Attachment", Part)
+Part.Anchored = true
+Part.CanCollide = false
+Part.Transparency = 1
+
+if not getgenv().Network then
+	getgenv().Network = {
+		BaseParts = {},
+		Velocity = Vector3.new(14.46262424, 14.46262424, 14.46262424)
+	}
+
+	Network.RetainPart = function(Part)
+		if Part:IsA("BasePart") and Part:IsDescendantOf(Workspace) then
+			table.insert(Network.BaseParts, Part)
+			Part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
+			Part.CanCollide = false
+		end
+	end
+
+	local function EnablePartControl()
+		LocalPlayer.ReplicationFocus = Workspace
+		RunService.Heartbeat:Connect(function()
+			sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
+			for _, Part in pairs(Network.BaseParts) do
+				if Part:IsDescendantOf(Workspace) then
+					Part.Velocity = Network.Velocity
+				end
+			end
+		end)
+	end
+
+	EnablePartControl()
+end
+
+local function ForcePart(v)
+	if v:IsA("BasePart") and not v.Anchored and not v.Parent:FindFirstChildOfClass("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
+		for _, x in ipairs(v:GetChildren()) do
+			if x:IsA("BodyMover") or x:IsA("RocketPropulsion") then
+				x:Destroy()
+			end
+		end
+		if v:FindFirstChild("Attachment") then
+			v:FindFirstChild("Attachment"):Destroy()
+		end
+		if v:FindFirstChild("AlignPosition") then
+			v:FindFirstChild("AlignPosition"):Destroy()
+		end
+		if v:FindFirstChild("Torque") then
+			v:FindFirstChild("Torque"):Destroy()
+		end
+		v.CanCollide = false
+		local Torque = Instance.new("Torque", v)
+		Torque.Torque = Vector3.new(100000, 100000, 100000)
+		local AlignPosition = Instance.new("AlignPosition", v)
+		local Attachment2 = Instance.new("Attachment", v)
+		Torque.Attachment0 = Attachment2
+		AlignPosition.MaxForce = math.huge
+		AlignPosition.MaxVelocity = math.huge
+		AlignPosition.Responsiveness = 200
+		AlignPosition.Attachment0 = Attachment2
+		AlignPosition.Attachment1 = Attachment1
+	end
+end
+
+local blackHoleActive = false
+local DescendantAddedConnection
+
+local function toggleBlackHole()
+	blackHoleActive = not blackHoleActive
+	if blackHoleActive then
+		Button.Text = "سحب الاشياء | مشغل"
+		for _, v in ipairs(Workspace:GetDescendants()) do
+			ForcePart(v)
+		end
+
+		DescendantAddedConnection = Workspace.DescendantAdded:Connect(function(v)
+			if blackHoleActive then
+				ForcePart(v)
+			end
+		end)
+
+		spawn(function()
+			while blackHoleActive and RunService.RenderStepped:Wait() do
+				Attachment1.WorldCFrame = humanoidRootPart.CFrame
+			end
+		end)
+	else
+		Button.Text = "سحب الاشياء | مطفء"
+		if DescendantAddedConnection then
+			DescendantAddedConnection:Disconnect()
+		end
+	end
+end
+
+local function getPlayer(name)
+	local lowerName = string.lower(name)
+	for _, p in pairs(Players:GetPlayers()) do
+		local lowerPlayer = string.lower(p.Name)
+		if string.find(lowerPlayer, lowerName) then
+			return p
+		elseif string.find(string.lower(p.DisplayName), lowerName) then
+			return p
+		end
+	end
+end
+
+local player = nil
+
+local function VDOYZQL_fake_script() -- Box.Script 
+	local script = Instance.new('Script', Box)
+
+	script.Parent.FocusLost:Connect(function(enterPressed)
+		if enterPressed then
+			player = getPlayer(Box.Text)
+			if player then
+				Box.Text = player.Name
+				print("Player found:", player.Name)
+			else
+				print("Player not found")
+			end
+		end
+	end)
+end
+coroutine.wrap(VDOYZQL_fake_script)()
+local function JUBNQKI_fake_script() -- Button.Script 
+	local script = Instance.new('Script', Button)
+
+	script.Parent.MouseButton1Click:Connect(function()
+		if player then
+			character = player.Character or player.CharacterAdded:Wait()
+			humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+			toggleBlackHole()
+		else
+			print("Player is not selected")
+		end
+	end)
+end
+coroutine.wrap(JUBNQKI_fake_script)()
+    end
+})
+
+local Section = Tab:AddSection({
 	Name = "سكربت انتقال"
 })
 
@@ -7808,10 +8059,17 @@ end)
 
 local Tab = Window:MakeTab({"السكربتات القويه", Icon = ""})
 
+Tab:AddButton({
+    Name = "Ghost Hub",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
+    end
+})
+
 local Tab = Window:MakeTab({"السكربتات", Icon = ""})
 
 Tab:AddButton({
-    Name = "tp tool",
+    Name = "اداه انتقال",
     Callback = function()
         -- tp
 
@@ -7829,7 +8087,7 @@ tool.Parent = game.Players.LocalPlayer.Backpack
 })
 
 Tab:AddButton({
-    Name = "Delete All Items",
+    Name = "حذف جميع الايتمات",
     Callback = function()
         -- Deletando todos os itens do inventÃ¡rio
         local player = game.Players.LocalPlayer
@@ -7838,13 +8096,6 @@ Tab:AddButton({
                 item:Destroy()  -- Deleta o item
             end
         end
-    end
-})
-
-Tab:AddButton({
-    Name = "fling Ball UI",
-    Callback = function()
-loadstring(game:HttpGet("https://pastebin.com/raw/fgEZsxws"))()
     end
 })
 
@@ -10827,363 +11078,6 @@ Tab:AddButton({
     end
 })
 
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
-Tab:AddButton({
-    Name = "",
-    Description = "اضغط هنا لتشغيل الاغنية",
-    Callback = function()
-        MusicId = ""
-        playMusic()
-    end
-})
-
-Tab:AddButton({
-    Name = "انسخ كود الاغنية",
-    Description = "اضغط هنا لنسخ كود الاغنية",
-    Callback = function()
-        setclipboard("")
-    end
-})
-
 local Tab = Window:MakeTab({"الاصوات", Icon = "music4"})
 
 local loopAtivo = false
@@ -11442,6 +11336,10 @@ createDropdown("اختر صوت رعب", {
         {name = "a sla medo dino", id = "125506416092123"}
     }
 }, "jumpscar")
+
+local Section = Tab:AddSection({
+	Name = ""
+})
 
 -- Lista de áudios
 local audios = {
@@ -11887,2034 +11785,7 @@ for _, btn in ipairs(teleportButtons) do
 end
 
 
-local ToolsTab = Window:MakeTab({"الابتمات", "backpack"})
-
--- Tabela de cores
-local colorsTable = {
-{Name = "Red", Color = Color3.fromRGB(255, 0, 0)},
-    {Name = "Orange", Color = Color3.fromRGB(255, 165, 0)},
-    {Name = "Yellow", Color = Color3.fromRGB(255, 255, 0)},
-    {Name = "Green", Color = Color3.fromRGB(0, 255, 0)},
-    {Name = "Cyan", Color = Color3.fromRGB(0, 255, 255)},
-    {Name = "Blue", Color = Color3.fromRGB(0, 0, 255)},
-    {Name = "Purple", Color = Color3.fromRGB(128, 0, 128)},
-    {Name = "Black", Color = Color3.fromRGB(0, 0, 0)}
-}
-
--- Botão para colorir o mapa
-ToolsTab:AddButton({
-    Name = "تلوين ارضيه الماب",
-    Callback = function()
-      local toolselected = "PaintRoller"
-local dupeamot = 100
-local picktoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l")
-local cleartoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s")
-local duping = true
-local oldcf = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-
-
-local TablaGripPos = {}
-for i = 1, 100 do
-    if i == 1 then
-        table.insert(TablaGripPos, Vector3.new(0, 5, 0)) 
-    else
-        table.insert(TablaGripPos, Vector3.new((i - 1) * 1.2, 5, 0)) 
-    end
-end
-
-local toolCount = 0
-for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-    if tool:IsA("Tool") and tool.Name == toolselected then
-        toolCount = toolCount + 1
-    end
-end
-for _, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-    if tool:IsA("Tool") and tool.Name == toolselected then
-        toolCount = toolCount + 1
-    end
-end
-
-if toolCount >= dupeamot then
-    -- Desequipa e move as ferramentas para as posições definidas
-    for i, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-        if tool:IsA("Tool") and tool.Name == toolselected then
-            tool.Parent = game.Players.LocalPlayer.Backpack
-        end
-    end
-    for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if tool:IsA("Tool") and tool.Name == toolselected then
-            tool.Parent = game.Players.LocalPlayer.Character
-            local gripPosIndex = math.min(i, #TablaGripPos)
-            local gripPos = TablaGripPos[gripPosIndex]
-            tool.GripPos = gripPos
-        end
-    end
-else
-    
-    local args = {
-        [1] = "ClearAllTools"
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(args))
-    
-    wait(0.2)
-    
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "DR4V3X Hub Dupe",
-        Text = "لا تقوم بالنقر على اي اداه",
-        Button1 = "حسنا!",
-        Duration = 3
-    })
-    
-    if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-        task.wait()
-        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-    end
-    
-    wait(0.1)
-    
-    if game:GetService("Workspace"):FindFirstChild("Camera") then
-        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-    end
-    
-    for m = 1, 2 do
-        task.wait()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-    end
-    
-    task.wait(0.2)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-    wait(0.5)
-    
-    for aidj, afh in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if not afh.Name == toolselected then
-            if afh:IsA("Tool") then
-                afh.Parent = game.Players.LocalPlayer.Backpack
-            end
-        end
-    end
-    
-    for aiefhiewhwf, dvjbvj in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-        if dvjbvj:IsA("Tool") then
-            if not dvjbvj.Name == toolselected then
-                dvjbvj:Destroy()
-            end
-        end
-    end
-    
-    for ttjtjutjutjjtj, ddvdvdsvdfbrnytytmvdv in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if ddvdvdsvdfbrnytytmvdv:IsA("Tool") then
-            if not ddvdvdsvdfbrnytytmvdv.name == toolselected then
-                ddvdvdsvdfbrnytytmvdv:Destroy()
-            end
-        end
-    end
-    
-    for findin, toollel in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if toollel:IsA("Tool") then
-            if toollel.Name == toolselected then
-                toollllfoun2 = true
-                for basc, aijfw in pairs(toollel:GetDescendants()) do
-                    if aijfw.Name == "Handle" then
-                        aijfw.Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-                        toollel.Parent = game.Players.LocalPlayer.Backpack
-                        toollel.Parent = game.Players.LocalPlayer.Character
-                        tolllahhhh = toollel
-                        task.wait()
-                    end
-                end
-            else
-                toollllfoun2 = false
-            end
-        end
-    end
-    
-    for fiifi, toollll in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-        if toollll:IsA("Tool") then
-            if toollll.Name == toolselected then
-                toollllfoun = true
-                for nana, jjsjsj in pairs(toollll:GetDescendants()) do
-                    if jjsjsj.Name == "Handle" then
-                        toollll.Parent = game.Players.LocalPlayer.Character
-                        wait()
-                        jjsjsj.Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-                        toollll.Parent = game.Players.LocalPlayer.Backpack
-                        toollll.Parent = game.Players.LocalPlayer.Character
-                        toolllffel = toollll
-                    end
-                end
-            else
-                toollllfoun = false
-            end
-        end
-    end
-    
-    if toollllfoun == true then
-        if game.Players.LocalPlayer.Character:FindFirstChild(toolllffel) == nil then
-            toollllfoun = false
-        end
-        repeat
-            wait()
-        until game.Players.LocalPlayer.Character:FindFirstChild(toolllffel) == nil
-        toollllfoun = false
-    end
-    
-    if toollllfoun2 == true then
-        if game.Players.LocalPlayer.Character:FindFirstChild(tollllahhhh) == nil then
-            toollllfoun2 = false
-        end
-        repeat
-            wait()
-        until game.Players.LocalPlayer.Character:FindFirstChild(tollllahhhh) == nil
-        toollllfoun2 = false
-    end
-    
-    wait(0.1)
-    
-    for m = 1, dupeamot do
-        if duping == false then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-            return
-        end
-        if game:GetService("Workspace"):FindFirstChild("Camera") then
-            game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-        end
-        if m <= dupeamot then
-        elseif m == dupeamot or m >= dupeamot - 1 then
-        end
-        local args = {
-            [1] = "PickingTools",
-            [2] = toolselected
-        }
-        picktoolremote:InvokeServer(unpack(args))
-        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolselected).Parent = game.Players.LocalPlayer.Character
-        if duping == false then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-            return
-        end
-        wait()
-        game:GetService("Players").LocalPlayer.Character[toolselected]:FindFirstChild("Handle").Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Backpack
-        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Character
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "DR4V3X Hub Tool",
-            Text = "Tool Duped: " .. m .. " / " .. dupeamot,
-            Duration = 1
-        })
-        repeat
-            if game:GetService("Workspace"):FindFirstChild("Camera") then
-                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-            end
-            task.wait()
-        until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected) == nil
-    end
-    
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-    repeat
-        wait()
-    until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-    repeat
-        wait()
-    until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcf
-    
-    for z, x in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if x.Name == toolselected then
-            toolamouth = z
-        end
-    end
-    
-    wait()
-    duping = false
-    wait(0.1)
-    
-    for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if tool:IsA("Tool") then
-            tool.Parent = game.Players.LocalPlayer.Character
-            local gripPosIndex = math.min(i, #TablaGripPos)
-            local gripPos = TablaGripPos[gripPosIndex]
-            if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                tool.GripPos = gripPos
-            else
-                warn("", tool.Name, "")
-            end
-        end
-    end
-    
-    wait(1)
-    
-    function EquiparTudo()
-        
-        local player = game:GetService("Players").LocalPlayer
-        
-        
-        local function changeAnimation(tool)  
-            if tool:FindFirstChild("CycleNextAnimation") then  
-                tool.CycleNextAnimation:FireServer()  
-            end  
-        end
-        
-        
-        for _, tool in ipairs(player.Backpack:GetChildren()) do  
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then  
-                changeAnimation(tool)  
-            end  
-        end
-        
-        
-        local character = player.Character or player.CharacterAdded:Wait()  
-        for _, tool in ipairs(character:GetChildren()) do  
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then  
-                changeAnimation(tool)  
-            end  
-        end
-        
-    end
-    
-    EquiparTudo()
-    wait(1)
-    EquiparTudo()
-    wait(1)
-    EquiparTudo()
-    
-    function startSpin()
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local rootPart = character:WaitForChild("HumanoidRootPart")
-        
-        task.wait(1)  
-        
-        local spinSpeed = math.rad(1750) 
-  
-        RunService.RenderStepped:Connect(function(dt)  
-            rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)  
-        end)
-        
-    end
-    
-    startSpin()
-end
-    end
-})
-
-ToolsTab:AddButton({
-    Name = "تلوين سماء الماب",
-    Callback = function()
-       local toolselected = "PaintRoller"
-local dupeamot = 100
-local picktoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l")
-local cleartoolremote = game:GetService("ReplicatedStorage").RE:FindFirstChild("1Clea1rTool1s")
-local duping = true
-local oldcf = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-
-
-local TablaGripPos = {}
-for i = 1, 100 do
-    if i == 1 then
-        table.insert(TablaGripPos, Vector3.new(2, 50, -50)) 
-    else
-        table.insert(TablaGripPos, Vector3.new((i - 1) * 2, 50, -50)) 
-    end
-end
-
-local toolCount = 0
-for _, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-    if tool:IsA("Tool") and tool.Name == toolselected then
-        toolCount = toolCount + 1
-    end
-end
-for _, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-    if tool:IsA("Tool") and tool.Name == toolselected then
-        toolCount = toolCount + 1
-    end
-end
-
-if toolCount >= dupeamot then
-    -- Desequipa e move as ferramentas para as posições definidas
-    for i, tool in pairs(game.Players.LocalPlayer.Character:GetChildren()) do
-        if tool:IsA("Tool") and tool.Name == toolselected then
-            tool.Parent = game.Players.LocalPlayer.Backpack
-        end
-    end
-    for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if tool:IsA("Tool") and tool.Name == toolselected then
-            tool.Parent = game.Players.LocalPlayer.Character
-            local gripPosIndex = math.min(i, #TablaGripPos)
-            local gripPos = TablaGripPos[gripPosIndex]
-            tool.GripPos = gripPos
-        end
-    end
-else
-    
-    local args = {
-        [1] = "ClearAllTools"
-    }
-    
-    game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(args))
-    
-    wait(0.2)
-    
-    game:GetService("StarterGui"):SetCore("SendNotification", {
-        Title = "DR4V3X Hub Dupe",
-        Text = "لا تقوم بالنقر على اي اداه",
-        Button1 = "Tendeu",
-        Duration = 3
-    })
-    
-    if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-        task.wait()
-        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-    end
-    
-    wait(0.1)
-    
-    if game:GetService("Workspace"):FindFirstChild("Camera") then
-        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-    end
-    
-    for m = 1, 2 do
-        task.wait()
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-    end
-    
-    task.wait(0.2)
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-    wait(0.5)
-    
-    for aidj, afh in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if not afh.Name == toolselected then
-            if afh:IsA("Tool") then
-                afh.Parent = game.Players.LocalPlayer.Backpack
-            end
-        end
-    end
-    
-    for aiefhiewhwf, dvjbvj in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-        if dvjbvj:IsA("Tool") then
-            if not dvjbvj.Name == toolselected then
-                dvjbvj:Destroy()
-            end
-        end
-    end
-    
-    for ttjtjutjutjjtj, ddvdvdsvdfbrnytytmvdv in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if ddvdvdsvdfbrnytytmvdv:IsA("Tool") then
-            if not ddvdvdsvdfbrnytytmvdv.name == toolselected then
-                ddvdvdsvdfbrnytytmvdv:Destroy()
-            end
-        end
-    end
-    
-    for findin, toollel in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
-        if toollel:IsA("Tool") then
-            if toollel.Name == toolselected then
-                toollllfoun2 = true
-                for basc, aijfw in pairs(toollel:GetDescendants()) do
-                    if aijfw.Name == "Handle" then
-                        aijfw.Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-                        toollel.Parent = game.Players.LocalPlayer.Backpack
-                        toollel.Parent = game.Players.LocalPlayer.Character
-                        tolllahhhh = toollel
-                        task.wait()
-                    end
-                end
-            else
-                toollllfoun2 = false
-            end
-        end
-    end
-    
-    for fiifi, toollll in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-        if toollll:IsA("Tool") then
-            if toollll.Name == toolselected then
-                toollllfoun = true
-                for nana, jjsjsj in pairs(toollll:GetDescendants()) do
-                    if jjsjsj.Name == "Handle" then
-                        toollll.Parent = game.Players.LocalPlayer.Character
-                        wait()
-                        jjsjsj.Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-                        toollll.Parent = game.Players.LocalPlayer.Backpack
-                        toollll.Parent = game.Players.LocalPlayer.Character
-                        toolllffel = toollll
-                    end
-                end
-            else
-                toollllfoun = false
-            end
-        end
-    end
-    
-    if toollllfoun == true then
-        if game.Players.LocalPlayer.Character:FindFirstChild(toolllffel) == nil then
-            toollllfoun = false
-        end
-        repeat
-            wait()
-        until game.Players.LocalPlayer.Character:FindFirstChild(toolllffel) == nil
-        toollllfoun = false
-    end
-    
-    if toollllfoun2 == true then
-        if game.Players.LocalPlayer.Character:FindFirstChild(tollllahhhh) == nil then
-            toollllfoun2 = false
-        end
-        repeat
-            wait()
-        until game.Players.LocalPlayer.Character:FindFirstChild(tollllahhhh) == nil
-        toollllfoun2 = false
-    end
-    
-    wait(0.1)
-    
-    for m = 1, dupeamot do
-        if duping == false then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-            return
-        end
-        if game:GetService("Workspace"):FindFirstChild("Camera") then
-            game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-        end
-        if m <= dupeamot then
-        elseif m == dupeamot or m >= dupeamot - 1 then
-        end
-        local args = {
-            [1] = "PickingTools",
-            [2] = toolselected
-        }
-        picktoolremote:InvokeServer(unpack(args))
-        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolselected).Parent = game.Players.LocalPlayer.Character
-        if duping == false then
-            game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-            return
-        end
-        wait()
-        game:GetService("Players").LocalPlayer.Character[toolselected]:FindFirstChild("Handle").Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Backpack
-        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolselected).Parent = game.Players.LocalPlayer.Character
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "DR4V3X Hub Tool",
-            Text = "Tool Duped: " .. m .. " / " .. dupeamot,
-            Duration = 1
-        })
-        repeat
-            if game:GetService("Workspace"):FindFirstChild("Camera") then
-                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-            end
-            task.wait()
-        until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolselected) == nil
-    end
-    
-    game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-    repeat
-        wait()
-    until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-    repeat
-        wait()
-    until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcf
-    
-    for z, x in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if x.Name == toolselected then
-            toolamouth = z
-        end
-    end
-    
-    wait()
-    duping = false
-    wait(0.1)
-    
-    for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-        if tool:IsA("Tool") then
-            tool.Parent = game.Players.LocalPlayer.Character
-            local gripPosIndex = math.min(i, #TablaGripPos)
-            local gripPos = TablaGripPos[gripPosIndex]
-            if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                tool.GripPos = gripPos
-            else
-                warn("", tool.Name, "")
-            end
-        end
-    end
-    
-    wait(1)
-    
-    function EquiparTudo()
-        
-        local player = game:GetService("Players").LocalPlayer
-        
-        
-        local function changeAnimation(tool)  
-            if tool:FindFirstChild("CycleNextAnimation") then  
-                tool.CycleNextAnimation:FireServer()  
-            end  
-        end
-        
-        
-        for _, tool in ipairs(player.Backpack:GetChildren()) do  
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then  
-                changeAnimation(tool)  
-            end  
-        end
-        
-        
-        local character = player.Character or player.CharacterAdded:Wait()  
-        for _, tool in ipairs(character:GetChildren()) do  
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then  
-                changeAnimation(tool)  
-            end  
-        end
-        
-    end
-    
-    EquiparTudo()
-    wait(1)
-    EquiparTudo()
-    wait(1)
-    EquiparTudo()
-    
-    function startSpin()
-        local Players = game:GetService("Players")
-        local RunService = game:GetService("RunService")
-        local player = Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local rootPart = character:WaitForChild("HumanoidRootPart")
-        
-        task.wait(1)  
-        
-        local spinSpeed = math.rad(1750) 
-  
-        RunService.RenderStepped:Connect(function(dt)  
-            rootPart.CFrame = rootPart.CFrame * CFrame.Angles(0, spinSpeed * dt, 0)  
-        end)
-    
-    
-    end
-    
-    startSpin() end
-end
-})
--- Variável para armazenar a cor selecionada
-local selectedColor = colorsTable[1].Color
-
--- Função para aplicar a cor selecionada
-local function applySelectedColor()
-    local LocalPlayer = game:GetService("Players").LocalPlayer
-    local backpack = LocalPlayer.Backpack
-    local character = LocalPlayer.Character
-    local args = {selectedColor}
-
-    local function changeToolColor(tool)
-        if tool:IsA("Tool") and tool.Name == "PaintRoller" then
-            local SetColor = tool:FindFirstChild("SetColor", true)
-            if SetColor then
-                SetColor:FireServer(unpack(args))
-            end
-        end
-    end
-
-    for _, tool in ipairs(backpack:GetChildren()) do
-        changeToolColor(tool)
-    end
-    for _, tool in ipairs(character:GetChildren()) do
-        changeToolColor(tool)
-    end
-end
-
--- Função para equipar e desequipar ferramentas
-local function equipAndUnequipTools(callback)
-    local LocalPlayer = game:GetService("Players").LocalPlayer
-    local backpack = LocalPlayer.Backpack
-    local character = LocalPlayer.Character
-
-    local function unequipTools()
-        for _, tool in ipairs(character:GetChildren()) do
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then
-                tool.Parent = backpack
-            end
-        end
-    end
-
-    local function equipTools()
-        for _, tool in ipairs(backpack:GetChildren()) do
-            if tool:IsA("Tool") and tool.Name == "PaintRoller" then
-                tool.Parent = character
-            end
-        end
-    end
-
-    unequipTools()
-    wait(0.7)
-    if callback then callback() end
-    wait(0.7)
-    equipTools()
-end
-
--- Dropdown para selecionar a cor
-ToolsTab:AddDropdown({
-    Name = "اختار اللون",
-    Description = "اختار اللون الذي تريد وضعه",
-    Options = (function()
-        local colorNames = {}
-        for _, color in ipairs(colorsTable) do
-            table.insert(colorNames, color.Name)
-        end
-        return colorNames
-    end)(),
-    Default = colorsTable[1].Name,
-    Callback = function(selected)
-        for _, color in ipairs(colorsTable) do
-            if color.Name == selected then
-                selectedColor = color.Color
-                equipAndUnequipTools(applySelectedColor)
-                break
-            end
-        end
-    end
-})
-
--- Função para aplicar ciclo RGB
-local function applyRGBCycle()
-    local LocalPlayer = game:GetService("Players").LocalPlayer
-    local backpack = LocalPlayer.Backpack
-    local character = LocalPlayer.Character
-    local toolIndex = 0
-    local totalColors = #colorsTable
-
-    local function changeToolColor(tool, color)
-        if tool:IsA("Tool") and tool.Name == "PaintRoller" then
-            local SetColor = tool:FindFirstChild("SetColor", true)
-            if SetColor then
-                SetColor:FireServer(color)
-            end
-        end
-    end
-
-    for _, tool in ipairs(backpack:GetChildren()) do
-        if tool.Name == "PaintRoller" then
-            toolIndex = toolIndex + 1
-            local color = colorsTable[(toolIndex - 1) % totalColors + 1].Color
-            changeToolColor(tool, color)
-        end
-    end
-    for _, tool in ipairs(character:GetChildren()) do
-        if tool.Name == "PaintRoller" then
-            toolIndex = toolIndex + 1
-            local color = colorsTable[(toolIndex - 1) % totalColors + 1].Color
-            changeToolColor(tool, color)
-        end
-    end
-end
-
--- Seção de controle de itens
-local Section = ToolsTab:AddSection({
-    Name = "التحكم بالايتمام"
-})
-
--- Botão para limpar todas as ferramentas
-ToolsTab:AddButton({
-    Name = "حذف جميع الايتمات",
-    Callback = function()
-        local args = {
-            [1] = "ClearAllTools"
-        }
-        game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1Clea1rTool1s"):FireServer(unpack(args))
-    end
-})
-
--- Botão para equipar todos os itens
-ToolsTab:AddButton({
-    Name = "اخذ جميع الايتمات",
-    Callback = function()
-        for _, tool in pairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-            if tool:IsA("Tool") then
-                tool.Parent = game.Players.LocalPlayer.Character
-            end
-        end
-    end
-})
-
--- Seção para Aura Grip
-Section = ToolsTab:AddSection({
-    Name = "القوى"
-})
-
--- Botão para Couch Aura
-ToolsTab:AddButton({
-    Name = "قوه الكنبه",
-    Callback = function()
-    nametools = "Couch Spray lel"
-                oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
-                toolthatiwanttodupe = "Couch"
-                tools = "Couch"
-                if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-                        task.wait()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end
-                wait(0.1)
-                local args = {
-                        [1] = "ClearAllTools"
-                }
-                
-                cleartoolremote:FireServer(unpack(args))
-                if game:GetService("Workspace"):FindFirstChild("Camera") then
-                        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                for m=1,2 do task.wait()
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-                        end
-                        task.wait(0.2)
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                wait(0.3)
-                duping = true
-                for m=1, 124 do
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                        local args = {
-                                [1] = "PickingTools",
-                                [2] = toolthatiwanttodupe
-                        }
-                        
-                        picktoolremote:InvokeServer(unpack(args))
-                        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        wait()
-                        game:GetService("Players").LocalPlayer.Character[toolthatiwanttodupe]:FindFirstChild("Handle").Name = "HÃ¢ÂÂ¥aÃ¢ÂÂ¥nÃ¢ÂÂ¥dÃ¢ÂÂ¥lÃ¢ÂÂ¥e"
-                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Backpack
-                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        repeat                 if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end wait() until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe) == nil
-                end
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                toolgrip = true
-                duping = false
-                wait()
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildOfClass("Humanoid")
-
-
-print("done")
-wait(1)
-local TablaGripPos = {
-       Vector3.new(0, 0, 0),
-  Vector3.new(10, 0, 0),
-  Vector3.new(20, 0, 0),
-  Vector3.new(30, 0, 0),
-  Vector3.new(40, 0, 0),
-  Vector3.new(50, 0, 0),
-  Vector3.new(60, 0, 0),                      
-  Vector3.new(-0, 0, 0),
-  Vector3.new(-10, 0, 0),
-  Vector3.new(-20, 0, 0),
-  Vector3.new(-30, 0, 0),
-  Vector3.new(-40, 0, 0),
-  Vector3.new(-50, 0, 0),
-  Vector3.new(-60, 0, 0),
-                      Vector3.new(0, 0, 30),
-  Vector3.new(10, 0, 30),
-  Vector3.new(20, 0, 30),
-  Vector3.new(30, 0, 30),
-  Vector3.new(40, 0, 30),
-  Vector3.new(50, 0, 30),
-  Vector3.new(60, 0, 30),
-  Vector3.new(-0, 0, 30),
-  Vector3.new(-10, 0, 30),
-  Vector3.new(-20, 0, 30),
-  Vector3.new(-30, 0, 30),
-  Vector3.new(-40, 0, 30),
-  Vector3.new(-50, 0, 30),
-  Vector3.new(-60, 0, 30),
-                          Vector3.new(0, 0, 45),
-  Vector3.new(10, 0, 45),
-  Vector3.new(20, 0, 45),
-  Vector3.new(30, 0, 45),
-  Vector3.new(40, 0, 45),
-  Vector3.new(50, 0, 45),
-  Vector3.new(60, 0, 45),
-  Vector3.new(-0, 0, 45),
-  Vector3.new(-10, 0, 45),
-  Vector3.new(-20, 0, 45),
-  Vector3.new(-30, 0, 45),
-  Vector3.new(-40, 0, 45),
-  Vector3.new(-50, 0, 45),
-  Vector3.new(-60, 0, 45),
-  Vector3.new(0, 0, 15),
-  Vector3.new(10, 0, 15),
-  Vector3.new(20, 0, 15),
-  Vector3.new(30, 0, 15),
-  Vector3.new(40, 0, 15),
-  Vector3.new(50, 0, 15),
-  Vector3.new(60, 0, 15),                          
-  Vector3.new(-0, 0, 15),
-  Vector3.new(-10, 0, 15),
-  Vector3.new(-20, 0, 15),
-  Vector3.new(-30, 0, 15),
-  Vector3.new(-40, 0, 15),
-  Vector3.new(-50, 0, 15),
-  Vector3.new(-60, 0, 15),
-Vector3.new(0, 0, -15),
-  Vector3.new(10, 0, -15),
-  Vector3.new(20, 0, -15),
-  Vector3.new(30, 0, -15),
-  Vector3.new(40, 0, -15),
-  Vector3.new(50, 0, -15),
-  Vector3.new(60, 0, -15),                      
-  Vector3.new(-0, 0, -15),
-  Vector3.new(-10, 0, -15),
-  Vector3.new(-20, 0, -15),
-  Vector3.new(-30, 0, -15),
-  Vector3.new(-40, 0, -15),
-  Vector3.new(-50, 0, -15),
-  Vector3.new(-60, 0, -15),
-  Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -30),
-  Vector3.new(20, 0, -30),
-  Vector3.new(30, 0, -30),
-  Vector3.new(40, 0, -30),
-  Vector3.new(50, 0, -30),
-  Vector3.new(60, 0, -30),                          
-  Vector3.new(-0, 0, -30),
-  Vector3.new(-10, 0, -30),
-  Vector3.new(-20, 0, -30),
-  Vector3.new(-30, 0, -30),
-  Vector3.new(-40, 0, -30),
-  Vector3.new(-50, 0, -30),
-  Vector3.new(-60, 0, -30),
-    Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -45),
-  Vector3.new(20, 0, -45),
-  Vector3.new(30, 0, -45),
-  Vector3.new(40, 0, -45),
-  Vector3.new(50, 0, -45),
-  Vector3.new(60, 0, -45),                          
-  Vector3.new(-0, 0, -45),
-  Vector3.new(-10, 0, -45),
-  Vector3.new(-20, 0, -45),
-  Vector3.new(-30, 0, -45),
-  Vector3.new(-40, 0, -45),
-  Vector3.new(-50, 0, -45),
-  Vector3.new(-60, 0, -45),
-    Vector3.new(10, 0, -60),
-  Vector3.new(20, 0, -60),
-  Vector3.new(30, 0, -60),
-  Vector3.new(40, 0, -60),
-  Vector3.new(50, 0, -60),
-  Vector3.new(60, 0, -60),                          
-  Vector3.new(-0, 0, -60),
-  Vector3.new(-10, 0, -60),
-  Vector3.new(-20, 0, -60),
-  Vector3.new(-30, 0, -60),
-  Vector3.new(-40, 0, -60),
-  Vector3.new(-50, 0, -60),
-  Vector3.new(-60, 0, -60),
-  Vector3.new(10, 0, -75),
-  Vector3.new(20, 0, -75),
-  Vector3.new(30, 0, -75),
-  Vector3.new(40, 0, -75),
-  Vector3.new(50, 0, -75),
-  Vector3.new(60, 0, -75),                          
-  Vector3.new(-0, 0, -75),
-  Vector3.new(-10, 0, -75),
-  Vector3.new(-20, 0, -75),
-  Vector3.new(-30, 0, -75),
-  Vector3.new(-40, 0, -75),
-  Vector3.new(-50, 0, -75),
-  Vector3.new(-60, 0, -75),
-
-
-     }
-      for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-          if tool:IsA("Tool") then
-              tool.Parent = game.Players.LocalPlayer.Character
-              local gripPosIndex = math.min(i, #TablaGripPos)
-              local gripPos = TablaGripPos[gripPosIndex]
-              
-              if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                  tool.GripPos = gripPos
-              else
-                  warn("", tool.Name, "")
-              end
-          end
-      end           
-    end
-})
-
--- Botão para Fire Aura
-ToolsTab:AddButton({
-    Name = "قوه النار",
-    Callback = function()
-        nametools = "fire Spray lel"
-                oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
-                toolthatiwanttodupe = "PaperbagFire"
-                tools = "PaperbagFire"
-                if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-                        task.wait()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end
-                wait(0.1)
-                local args = {
-                        [1] = "ClearAllTools"
-                }
-                
-                cleartoolremote:FireServer(unpack(args))
-                if game:GetService("Workspace"):FindFirstChild("Camera") then
-                        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                for m=1,2 do task.wait()
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-                        end
-                        task.wait(0.2)
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                wait(0.3)
-                duping = true
-                for m=1, 124 do
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                        local args = {
-                                [1] = "PickingTools",
-                                [2] = toolthatiwanttodupe
-                        }
-                        
-                        picktoolremote:InvokeServer(unpack(args))
-                        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        wait()
-                        game:GetService("Players").LocalPlayer.Character[toolthatiwanttodupe]:FindFirstChild("Handle").Name = "HÃ¢ÂÂ¥aÃ¢ÂÂ¥nÃ¢ÂÂ¥dÃ¢ÂÂ¥lÃ¢ÂÂ¥e"
-                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Backpack
-                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        repeat                 if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end wait() until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe) == nil
-                end
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                toolgrip = true
-                duping = false
-                wait()
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildOfClass("Humanoid")
-
-
-print("done")
-wait(1)
-local TablaGripPos = {
-       Vector3.new(0, 0, 0),
-  Vector3.new(10, 0, 0),
-  Vector3.new(20, 0, 0),
-  Vector3.new(30, 0, 0),
-  Vector3.new(40, 0, 0),
-  Vector3.new(50, 0, 0),
-  Vector3.new(60, 0, 0),                      
-  Vector3.new(-0, 0, 0),
-  Vector3.new(-10, 0, 0),
-  Vector3.new(-20, 0, 0),
-  Vector3.new(-30, 0, 0),
-  Vector3.new(-40, 0, 0),
-  Vector3.new(-50, 0, 0),
-  Vector3.new(-60, 0, 0),
-                      Vector3.new(0, 0, 30),
-  Vector3.new(10, 0, 30),
-  Vector3.new(20, 0, 30),
-  Vector3.new(30, 0, 30),
-  Vector3.new(40, 0, 30),
-  Vector3.new(50, 0, 30),
-  Vector3.new(60, 0, 30),
-  Vector3.new(-0, 0, 30),
-  Vector3.new(-10, 0, 30),
-  Vector3.new(-20, 0, 30),
-  Vector3.new(-30, 0, 30),
-  Vector3.new(-40, 0, 30),
-  Vector3.new(-50, 0, 30),
-  Vector3.new(-60, 0, 30),
-                          Vector3.new(0, 0, 45),
-  Vector3.new(10, 0, 45),
-  Vector3.new(20, 0, 45),
-  Vector3.new(30, 0, 45),
-  Vector3.new(40, 0, 45),
-  Vector3.new(50, 0, 45),
-  Vector3.new(60, 0, 45),
-  Vector3.new(-0, 0, 45),
-  Vector3.new(-10, 0, 45),
-  Vector3.new(-20, 0, 45),
-  Vector3.new(-30, 0, 45),
-  Vector3.new(-40, 0, 45),
-  Vector3.new(-50, 0, 45),
-  Vector3.new(-60, 0, 45),
-  Vector3.new(0, 0, 15),
-  Vector3.new(10, 0, 15),
-  Vector3.new(20, 0, 15),
-  Vector3.new(30, 0, 15),
-  Vector3.new(40, 0, 15),
-  Vector3.new(50, 0, 15),
-  Vector3.new(60, 0, 15),                          
-  Vector3.new(-0, 0, 15),
-  Vector3.new(-10, 0, 15),
-  Vector3.new(-20, 0, 15),
-  Vector3.new(-30, 0, 15),
-  Vector3.new(-40, 0, 15),
-  Vector3.new(-50, 0, 15),
-  Vector3.new(-60, 0, 15),
-Vector3.new(0, 0, -15),
-  Vector3.new(10, 0, -15),
-  Vector3.new(20, 0, -15),
-  Vector3.new(30, 0, -15),
-  Vector3.new(40, 0, -15),
-  Vector3.new(50, 0, -15),
-  Vector3.new(60, 0, -15),                      
-  Vector3.new(-0, 0, -15),
-  Vector3.new(-10, 0, -15),
-  Vector3.new(-20, 0, -15),
-  Vector3.new(-30, 0, -15),
-  Vector3.new(-40, 0, -15),
-  Vector3.new(-50, 0, -15),
-  Vector3.new(-60, 0, -15),
-  Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -30),
-  Vector3.new(20, 0, -30),
-  Vector3.new(30, 0, -30),
-  Vector3.new(40, 0, -30),
-  Vector3.new(50, 0, -30),
-  Vector3.new(60, 0, -30),                          
-  Vector3.new(-0, 0, -30),
-  Vector3.new(-10, 0, -30),
-  Vector3.new(-20, 0, -30),
-  Vector3.new(-30, 0, -30),
-  Vector3.new(-40, 0, -30),
-  Vector3.new(-50, 0, -30),
-  Vector3.new(-60, 0, -30),
-    Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -45),
-  Vector3.new(20, 0, -45),
-  Vector3.new(30, 0, -45),
-  Vector3.new(40, 0, -45),
-  Vector3.new(50, 0, -45),
-  Vector3.new(60, 0, -45),                          
-  Vector3.new(-0, 0, -45),
-  Vector3.new(-10, 0, -45),
-  Vector3.new(-20, 0, -45),
-  Vector3.new(-30, 0, -45),
-  Vector3.new(-40, 0, -45),
-  Vector3.new(-50, 0, -45),
-  Vector3.new(-60, 0, -45),
-    Vector3.new(10, 0, -60),
-  Vector3.new(20, 0, -60),
-  Vector3.new(30, 0, -60),
-  Vector3.new(40, 0, -60),
-  Vector3.new(50, 0, -60),
-  Vector3.new(60, 0, -60),                          
-  Vector3.new(-0, 0, -60),
-  Vector3.new(-10, 0, -60),
-  Vector3.new(-20, 0, -60),
-  Vector3.new(-30, 0, -60),
-  Vector3.new(-40, 0, -60),
-  Vector3.new(-50, 0, -60),
-  Vector3.new(-60, 0, -60),
-  Vector3.new(10, 0, -75),
-  Vector3.new(20, 0, -75),
-  Vector3.new(30, 0, -75),
-  Vector3.new(40, 0, -75),
-  Vector3.new(50, 0, -75),
-  Vector3.new(60, 0, -75),                          
-  Vector3.new(-0, 0, -75),
-  Vector3.new(-10, 0, -75),
-  Vector3.new(-20, 0, -75),
-  Vector3.new(-30, 0, -75),
-  Vector3.new(-40, 0, -75),
-  Vector3.new(-50, 0, -75),
-  Vector3.new(-60, 0, -75),
-
-
-     }
-      for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-          if tool:IsA("Tool") then
-              tool.Parent = game.Players.LocalPlayer.Character
-              local gripPosIndex = math.min(i, #TablaGripPos)
-              local gripPos = TablaGripPos[gripPosIndex]
-              
-              if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                  tool.GripPos = gripPos
-              else
-                  warn("", tool.Name, "")
-              end
-          end
-      end           
-    end
-})
-
--- Botão para Water Aura
-ToolsTab:AddButton({
-    Name = "قوه الماء",
-    Callback = function()
-        nametools = "water Spray lel"
-                oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار اانسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
-                toolthatiwanttodupe = "WateringCan"
-                tools = "WateringCan"
-                if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-                        task.wait()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end
-                wait(0.1)
-                local args = {
-                        [1] = "ClearAllTools"
-                }
-                
-                cleartoolremote:FireServer(unpack(args))
-                if game:GetService("Workspace"):FindFirstChild("Camera") then
-                        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                for m=1,2 do task.wait()
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-                        end
-                        task.wait(0.2)
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                wait(0.3)
-                duping = true
-                for m=1, 124 do
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                        local args = {
-                                [1] = "PickingTools",
-                                [2] = toolthatiwanttodupe
-                        }
-                        
-                        picktoolremote:InvokeServer(unpack(args))
-                        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        wait()
-                        game:GetService("Players").LocalPlayer.Character[toolthatiwanttodupe]:FindFirstChild("Handle").Name = "HÃ¢ÂÂ¥aÃ¢ÂÂ¥nÃ¢ÂÂ¥dÃ¢ÂÂ¥lÃ¢ÂÂ¥e"
-                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Backpack
-                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        repeat                 if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end wait() until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe) == nil
-                end
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                toolgrip = true
-                duping = false
-                wait()
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildOfClass("Humanoid")
-
-
-print("done")
-wait(1)
-local TablaGripPos = {
-       Vector3.new(0, 0, 0),
-  Vector3.new(10, 0, 0),
-  Vector3.new(20, 0, 0),
-  Vector3.new(30, 0, 0),
-  Vector3.new(40, 0, 0),
-  Vector3.new(50, 0, 0),
-  Vector3.new(60, 0, 0),                      
-  Vector3.new(-0, 0, 0),
-  Vector3.new(-10, 0, 0),
-  Vector3.new(-20, 0, 0),
-  Vector3.new(-30, 0, 0),
-  Vector3.new(-40, 0, 0),
-  Vector3.new(-50, 0, 0),
-  Vector3.new(-60, 0, 0),
-                      Vector3.new(0, 0, 30),
-  Vector3.new(10, 0, 30),
-  Vector3.new(20, 0, 30),
-  Vector3.new(30, 0, 30),
-  Vector3.new(40, 0, 30),
-  Vector3.new(50, 0, 30),
-  Vector3.new(60, 0, 30),
-  Vector3.new(-0, 0, 30),
-  Vector3.new(-10, 0, 30),
-  Vector3.new(-20, 0, 30),
-  Vector3.new(-30, 0, 30),
-  Vector3.new(-40, 0, 30),
-  Vector3.new(-50, 0, 30),
-  Vector3.new(-60, 0, 30),
-                          Vector3.new(0, 0, 45),
-  Vector3.new(10, 0, 45),
-  Vector3.new(20, 0, 45),
-  Vector3.new(30, 0, 45),
-  Vector3.new(40, 0, 45),
-  Vector3.new(50, 0, 45),
-  Vector3.new(60, 0, 45),
-  Vector3.new(-0, 0, 45),
-  Vector3.new(-10, 0, 45),
-  Vector3.new(-20, 0, 45),
-  Vector3.new(-30, 0, 45),
-  Vector3.new(-40, 0, 45),
-  Vector3.new(-50, 0, 45),
-  Vector3.new(-60, 0, 45),
-  Vector3.new(0, 0, 15),
-  Vector3.new(10, 0, 15),
-  Vector3.new(20, 0, 15),
-  Vector3.new(30, 0, 15),
-  Vector3.new(40, 0, 15),
-  Vector3.new(50, 0, 15),
-  Vector3.new(60, 0, 15),                          
-  Vector3.new(-0, 0, 15),
-  Vector3.new(-10, 0, 15),
-  Vector3.new(-20, 0, 15),
-  Vector3.new(-30, 0, 15),
-  Vector3.new(-40, 0, 15),
-  Vector3.new(-50, 0, 15),
-  Vector3.new(-60, 0, 15),
-Vector3.new(0, 0, -15),
-  Vector3.new(10, 0, -15),
-  Vector3.new(20, 0, -15),
-  Vector3.new(30, 0, -15),
-  Vector3.new(40, 0, -15),
-  Vector3.new(50, 0, -15),
-  Vector3.new(60, 0, -15),                      
-  Vector3.new(-0, 0, -15),
-  Vector3.new(-10, 0, -15),
-  Vector3.new(-20, 0, -15),
-  Vector3.new(-30, 0, -15),
-  Vector3.new(-40, 0, -15),
-  Vector3.new(-50, 0, -15),
-  Vector3.new(-60, 0, -15),
-  Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -30),
-  Vector3.new(20, 0, -30),
-  Vector3.new(30, 0, -30),
-  Vector3.new(40, 0, -30),
-  Vector3.new(50, 0, -30),
-  Vector3.new(60, 0, -30),                          
-  Vector3.new(-0, 0, -30),
-  Vector3.new(-10, 0, -30),
-  Vector3.new(-20, 0, -30),
-  Vector3.new(-30, 0, -30),
-  Vector3.new(-40, 0, -30),
-  Vector3.new(-50, 0, -30),
-  Vector3.new(-60, 0, -30),
-    Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -45),
-  Vector3.new(20, 0, -45),
-  Vector3.new(30, 0, -45),
-  Vector3.new(40, 0, -45),
-  Vector3.new(50, 0, -45),
-  Vector3.new(60, 0, -45),                          
-  Vector3.new(-0, 0, -45),
-  Vector3.new(-10, 0, -45),
-  Vector3.new(-20, 0, -45),
-  Vector3.new(-30, 0, -45),
-  Vector3.new(-40, 0, -45),
-  Vector3.new(-50, 0, -45),
-  Vector3.new(-60, 0, -45),
-    Vector3.new(10, 0, -60),
-  Vector3.new(20, 0, -60),
-  Vector3.new(30, 0, -60),
-  Vector3.new(40, 0, -60),
-  Vector3.new(50, 0, -60),
-  Vector3.new(60, 0, -60),                          
-  Vector3.new(-0, 0, -60),
-  Vector3.new(-10, 0, -60),
-  Vector3.new(-20, 0, -60),
-  Vector3.new(-30, 0, -60),
-  Vector3.new(-40, 0, -60),
-  Vector3.new(-50, 0, -60),
-  Vector3.new(-60, 0, -60),
-  Vector3.new(10, 0, -75),
-  Vector3.new(20, 0, -75),
-  Vector3.new(30, 0, -75),
-  Vector3.new(40, 0, -75),
-  Vector3.new(50, 0, -75),
-  Vector3.new(60, 0, -75),                          
-  Vector3.new(-0, 0, -75),
-  Vector3.new(-10, 0, -75),
-  Vector3.new(-20, 0, -75),
-  Vector3.new(-30, 0, -75),
-  Vector3.new(-40, 0, -75),
-  Vector3.new(-50, 0, -75),
-  Vector3.new(-60, 0, -75),
-
-
-     }
-      for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-          if tool:IsA("Tool") then
-              tool.Parent = game.Players.LocalPlayer.Character
-              local gripPosIndex = math.min(i, #TablaGripPos)
-              local gripPos = TablaGripPos[gripPosIndex]
-              
-              if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                  tool.GripPos = gripPos
-              else
-                  warn("", tool.Name, "")
-              end
-          end
-      end
-    end
-})
-
--- Botão para Light Aura
-ToolsTab:AddButton({
-    Name = "قوه الضوء",
-    Callback = function()
-        nametools = "light Spray lel"
-                oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-game:GetService("StarterGui"):SetCore("SendNotification",{Title="جار النسخ",Text="لا تقم بالنقر على اي اداه", Button1 = "لقد فهمت!" ,Duration=5})
-                toolthatiwanttodupe = "FlashLight"
-                tools = "FlashLight"
-                if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-                        task.wait()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end
-                wait(0.1)
-                local args = {
-                        [1] = "ClearAllTools"
-                }
-                
-                cleartoolremote:FireServer(unpack(args))
-                if game:GetService("Workspace"):FindFirstChild("Camera") then
-                        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                for m=1,2 do task.wait()
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-                        end
-                        task.wait(0.2)
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                wait(0.3)
-                duping = true
-                for m=1, 124 do
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                        local args = {
-                                [1] = "PickingTools",
-                                [2] = toolthatiwanttodupe
-                        }
-                        
-                        picktoolremote:InvokeServer(unpack(args))
-                        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        wait()
-                        game:GetService("Players").LocalPlayer.Character[toolthatiwanttodupe]:FindFirstChild("Handle").Name = "HÃ¢ÂÂ¥aÃ¢ÂÂ¥nÃ¢ÂÂ¥dÃ¢ÂÂ¥lÃ¢ÂÂ¥e"
-                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Backpack
-                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        repeat                 if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end wait() until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe) == nil
-                end
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                toolgrip = true
-                duping = false
-                wait()
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoid = character:FindFirstChildOfClass("Humanoid")
-
-
-print("done")
-wait(1)
-local TablaGripPos = {
-       Vector3.new(0, 0, 0),
-  Vector3.new(10, 0, 0),
-  Vector3.new(20, 0, 0),
-  Vector3.new(30, 0, 0),
-  Vector3.new(40, 0, 0),
-  Vector3.new(50, 0, 0),
-  Vector3.new(60, 0, 0),                      
-  Vector3.new(-0, 0, 0),
-  Vector3.new(-10, 0, 0),
-  Vector3.new(-20, 0, 0),
-  Vector3.new(-30, 0, 0),
-  Vector3.new(-40, 0, 0),
-  Vector3.new(-50, 0, 0),
-  Vector3.new(-60, 0, 0),
-                      Vector3.new(0, 0, 30),
-  Vector3.new(10, 0, 30),
-  Vector3.new(20, 0, 30),
-  Vector3.new(30, 0, 30),
-  Vector3.new(40, 0, 30),
-  Vector3.new(50, 0, 30),
-  Vector3.new(60, 0, 30),
-  Vector3.new(-0, 0, 30),
-  Vector3.new(-10, 0, 30),
-  Vector3.new(-20, 0, 30),
-  Vector3.new(-30, 0, 30),
-  Vector3.new(-40, 0, 30),
-  Vector3.new(-50, 0, 30),
-  Vector3.new(-60, 0, 30),
-                          Vector3.new(0, 0, 45),
-  Vector3.new(10, 0, 45),
-  Vector3.new(20, 0, 45),
-  Vector3.new(30, 0, 45),
-  Vector3.new(40, 0, 45),
-  Vector3.new(50, 0, 45),
-  Vector3.new(60, 0, 45),
-  Vector3.new(-0, 0, 45),
-  Vector3.new(-10, 0, 45),
-  Vector3.new(-20, 0, 45),
-  Vector3.new(-30, 0, 45),
-  Vector3.new(-40, 0, 45),
-  Vector3.new(-50, 0, 45),
-  Vector3.new(-60, 0, 45),
-  Vector3.new(0, 0, 15),
-  Vector3.new(10, 0, 15),
-  Vector3.new(20, 0, 15),
-  Vector3.new(30, 0, 15),
-  Vector3.new(40, 0, 15),
-  Vector3.new(50, 0, 15),
-  Vector3.new(60, 0, 15),                          
-  Vector3.new(-0, 0, 15),
-  Vector3.new(-10, 0, 15),
-  Vector3.new(-20, 0, 15),
-  Vector3.new(-30, 0, 15),
-  Vector3.new(-40, 0, 15),
-  Vector3.new(-50, 0, 15),
-  Vector3.new(-60, 0, 15),
-Vector3.new(0, 0, -15),
-  Vector3.new(10, 0, -15),
-  Vector3.new(20, 0, -15),
-  Vector3.new(30, 0, -15),
-  Vector3.new(40, 0, -15),
-  Vector3.new(50, 0, -15),
-  Vector3.new(60, 0, -15),                      
-  Vector3.new(-0, 0, -15),
-  Vector3.new(-10, 0, -15),
-  Vector3.new(-20, 0, -15),
-  Vector3.new(-30, 0, -15),
-  Vector3.new(-40, 0, -15),
-  Vector3.new(-50, 0, -15),
-  Vector3.new(-60, 0, -15),
-  Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -30),
-  Vector3.new(20, 0, -30),
-  Vector3.new(30, 0, -30),
-  Vector3.new(40, 0, -30),
-  Vector3.new(50, 0, -30),
-  Vector3.new(60, 0, -30),                          
-  Vector3.new(-0, 0, -30),
-  Vector3.new(-10, 0, -30),
-  Vector3.new(-20, 0, -30),
-  Vector3.new(-30, 0, -30),
-  Vector3.new(-40, 0, -30),
-  Vector3.new(-50, 0, -30),
-  Vector3.new(-60, 0, -30),
-    Vector3.new(0, 0, -30),
-  Vector3.new(10, 0, -45),
-  Vector3.new(20, 0, -45),
-  Vector3.new(30, 0, -45),
-  Vector3.new(40, 0, -45),
-  Vector3.new(50, 0, -45),
-  Vector3.new(60, 0, -45),                          
-  Vector3.new(-0, 0, -45),
-  Vector3.new(-10, 0, -45),
-  Vector3.new(-20, 0, -45),
-  Vector3.new(-30, 0, -45),
-  Vector3.new(-40, 0, -45),
-  Vector3.new(-50, 0, -45),
-  Vector3.new(-60, 0, -45),
-    Vector3.new(10, 0, -60),
-  Vector3.new(20, 0, -60),
-  Vector3.new(30, 0, -60),
-  Vector3.new(40, 0, -60),
-  Vector3.new(50, 0, -60),
-  Vector3.new(60, 0, -60),                          
-  Vector3.new(-0, 0, -60),
-  Vector3.new(-10, 0, -60),
-  Vector3.new(-20, 0, -60),
-  Vector3.new(-30, 0, -60),
-  Vector3.new(-40, 0, -60),
-  Vector3.new(-50, 0, -60),
-  Vector3.new(-60, 0, -60),
-  Vector3.new(10, 0, -75),
-  Vector3.new(20, 0, -75),
-  Vector3.new(30, 0, -75),
-  Vector3.new(40, 0, -75),
-  Vector3.new(50, 0, -75),
-  Vector3.new(60, 0, -75),                          
-  Vector3.new(-0, 0, -75),
-  Vector3.new(-10, 0, -75),
-  Vector3.new(-20, 0, -75),
-  Vector3.new(-30, 0, -75),
-  Vector3.new(-40, 0, -75),
-  Vector3.new(-50, 0, -75),
-  Vector3.new(-60, 0, -75),
-
-
-     }
-      for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-          if tool:IsA("Tool") then
-              tool.Parent = game.Players.LocalPlayer.Character
-              local gripPosIndex = math.min(i, #TablaGripPos)
-              local gripPos = TablaGripPos[gripPosIndex]
-              
-              if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                  tool.GripPos = gripPos
-              else
-                  warn("", tool.Name, "")
-              end
-          end
-      end
-    end
-})
-
--- Botão para Smoke Aura
-ToolsTab:AddButton({
-    Name = "قوه الدخان",
-    Callback = function()
-        game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "جار النسخ",
-            Text = "لا تقن بالنقر على اي اداه",
-            Button1 = "لقد فهمت!",
-            Duration = 5
-        })
-        local args = {
-            [1] = "ClearAllTools"
-        }
-        cleartoolremote:FireServer(unpack(args))
-        if game:GetService("Workspace"):FindFirstChild("Camera") then
-            game:GetService("Workspace"):FindFirstChild("Camera"):Destroy()
-        end
-        wait(0.3)
-        for i = 1, 124 do
-            local args = {
-                [1] = "PickingTools",
-                [2] = "FireHose"
-            }
-            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Too1l"):InvokeServer(unpack(args))
-            local args = {
-                [1] = "FireHose",
-                [2] = "DestroyFireHose"
-            }
-            game:GetService("Players").LocalPlayer.Backpack.FireHose.ToolSound:FireServer(unpack(args))
-        end
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local humanoid = character:FindFirstChildOfClass("Humanoid")
-        if humanoid then
-            humanoid.Health = 0
-        end
-        wait(8)
-        local TablaGripPos = {
-            Vector3.new(0, 0, 0), Vector3.new(10, 0, 0), Vector3.new(20, 0, 0), Vector3.new(30, 0, 0),
-            Vector3.new(40, 0, 0), Vector3.new(50, 0, 0), Vector3.new(60, 0, 0), Vector3.new(-0, 0, 0),
-            Vector3.new(-10, 0, 0), Vector3.new(-20, 0, 0), Vector3.new(-30, 0, 0), Vector3.new(-40, 0, 0),
-            Vector3.new(-50, 0, 0), Vector3.new(-60, 0, 0), Vector3.new(0, 0, 30), Vector3.new(10, 0, 30),
-            Vector3.new(20, 0, 30), Vector3.new(30, 0, 30), Vector3.new(40, 0, 30), Vector3.new(50, 0, 30),
-            Vector3.new(60, 0, 30), Vector3.new(-0, 0, 30), Vector3.new(-10, 0, 30), Vector3.new(-20, 0, 30),
-            Vector3.new(-30, 0, 30), Vector3.new(-40, 0, 30), Vector3.new(-50, 0, 30), Vector3.new(-60, 0, 30),
-            Vector3.new(0, 0, 45), Vector3.new(10, 0, 45), Vector3.new(20, 0, 45), Vector3.new(30, 0, 45),
-            Vector3.new(40, 0, 45), Vector3.new(50, 0, 45), Vector3.new(60, 0, 45), Vector3.new(-0, 0, 45),
-            Vector3.new(-10, 0, 45), Vector3.new(-20, 0, 45), Vector3.new(-30, 0, 45), Vector3.new(-40, 0, 45),
-            Vector3.new(-50, 0, 45), Vector3.new(-60, 0, 45), Vector3.new(0, 0, 15), Vector3.new(10, 0, 15),
-            Vector3.new(20, 0, 15), Vector3.new(30, 0, 15), Vector3.new(40, 0, 15), Vector3.new(50, 0, 15),
-            Vector3.new(60, 0, 15), Vector3.new(-0, 0, 15), Vector3.new(-10, 0, 15), Vector3.new(-20, 0, 15),
-            Vector3.new(-30, 0, 15), Vector3.new(-40, 0, 15), Vector3.new(-50, 0, 15), Vector3.new(-60, 0, 15),
-            Vector3.new(0, 0, -15), Vector3.new(10, 0, -15), Vector3.new(20, 0, -15), Vector3.new(30, 0, -15),
-            Vector3.new(40, 0, -15), Vector3.new(50, 0, -15), Vector3.new(60, 0, -15), Vector3.new(-0, 0, -15),
-            Vector3.new(-10, 0, -15), Vector3.new(-20, 0, -15), Vector3.new(-30, 0, -15), Vector3.new(-40, 0, -15),
-            Vector3.new(-50, 0, -15), Vector3.new(-60, 0, -15), Vector3.new(0, 0, -30), Vector3.new(10, 0, -30),
-            Vector3.new(20, 0, -30), Vector3.new(30, 0, -30), Vector3.new(40, 0, -30), Vector3.new(50, 0, -30),
-            Vector3.new(60, 0, -30), Vector3.new(-0, 0, -30), Vector3.new(-10, 0, -30), Vector3.new(-20, 0, -30),
-            Vector3.new(-30, 0, -30), Vector3.new(-40, 0, -30), Vector3.new(-50, 0, -30), Vector3.new(-60, 0, -30),
-            Vector3.new(0, 0, -30), Vector3.new(10, 0, -45), Vector3.new(20, 0, -45), Vector3.new(30, 0, -45),
-            Vector3.new(40, 0, -45), Vector3.new(50, 0, -45), Vector3.new(60, 0, -45), Vector3.new(-0, 0, -45),
-            Vector3.new(-10, 0, -45), Vector3.new(-20, 0, -45), Vector3.new(-30, 0, -45), Vector3.new(-40, 0, -45),
-            Vector3.new(-50, 0, -45), Vector3.new(-60, 0, -45), Vector3.new(10, 0, -60), Vector3.new(20, 0, -60),
-            Vector3.new(30, 0, -60), Vector3.new(40, 0, -60), Vector3.new(50, 0, -60), Vector3.new(60, 0, -60),
-            Vector3.new(-0, 0, -60), Vector3.new(-10, 0, -60), Vector3.new(-20, 0, -60), Vector3.new(-30, 0, -60),
-            Vector3.new(-40, 0, -60), Vector3.new(-50, 0, -60), Vector3.new(-60, 0, -60), Vector3.new(10, 0, -75),
-            Vector3.new(20, 0, -75), Vector3.new(30, 0, -75), Vector3.new(40, 0, -75), Vector3.new(50, 0, -75),
-            Vector3.new(60, 0, -75), Vector3.new(-0, 0, -75), Vector3.new(-10, 0, -75), Vector3.new(-20, 0, -75),
-            Vector3.new(-30, 0, -75), Vector3.new(-40, 0, -75), Vector3.new(-50, 0, -75), Vector3.new(-60, 0, -75)
-        }
-        for i, tool in pairs(game.Players.LocalPlayer.Backpack:GetChildren()) do
-            if tool:IsA("Tool") then
-                tool.Parent = game.Players.LocalPlayer.Character
-                local gripPosIndex = math.min(i, #TablaGripPos)
-                local gripPos = TablaGripPos[gripPosIndex]
-                if tool:IsDescendantOf(game.Players.LocalPlayer.Character) then
-                    tool.GripPos = gripPos
-                else
-                    warn("Ferramenta ", tool.Name, " não está no personagem.")
-                end
-            end
-        end
-    end
-})
-
--- Seção para D1ck Grip
-Section = ToolsTab:AddSection({
-    Name = ""
-})
-
--- Botão para Black D1ck
-ToolsTab:AddButton({
-    Name = "ز^ب اسود",
-    Callback = function()
-                        oldcframe = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-                toolthatiwanttodupe = "Box"
-                tools = "Box"
-                if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
-                        task.wait()
-                        game.Players.LocalPlayer.Character.Humanoid.Sit = false
-                end
-                wait(0.1)
-                local args = {
-                        [1] = "ClearAllTools"
-                }
-                
-                cleartoolremote:FireServer(unpack(args))
-                if game:GetService("Workspace"):FindFirstChild("Camera") then
-                        game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                for m=1,2 do task.wait()
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(999999999.414, -490, 999999999.414, 0.974360406, -0.175734088, 0.14049761, -0.133441404, 0.0514053069, 0.989722729, -0.181150302, -0.983094692, 0.0266370922)
-                        end
-                        task.wait(0.2)
-                        game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
-                wait(0.3)
-                duping = true
-                for m=1, 76 do
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end
-                        local args = {
-                                [1] = "PickingTools",
-                                [2] = toolthatiwanttodupe
-                        }
-                        
-                        picktoolremote:InvokeServer(unpack(args))
-                        game:GetService("Players").LocalPlayer.Backpack:WaitForChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        if duping == false then game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false return end
-                        wait()
-                        game:GetService("Players").LocalPlayer.Character[toolthatiwanttodupe]:FindFirstChild("Handle").Name = "Hâ¥aâ¥nâ¥dâ¥lâ¥e"
-                        game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Backpack
-                        game:GetService("Players").LocalPlayer.Backpack:FindFirstChild(toolthatiwanttodupe).Parent = game.Players.LocalPlayer.Character
-                        repeat                 if game:GetService("Workspace"):FindFirstChild("Camera") then
-                                game:GetService("Workspace"):FindFirstChild("Camera"):Destroy() end wait() until game:GetService("Players").LocalPlayer.Character:FindFirstChild(toolthatiwanttodupe) == nil
-                end
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") == nil
-                repeat wait() until game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-                toolgrip = true
-                duping = false
-                wait(1)
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -1.5, 0)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, 2)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, 6)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, 8)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, -8)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, -6)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, 0, -2)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -1, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -2, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -3, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -4, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -5, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -6, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -7, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -8, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -9, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10, -10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, -9)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, -8)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, -6)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10, -5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -11.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -12.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -13.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -14.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -15.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -16.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -17.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -18.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -19.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -20.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -21.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -22.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -23.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -24.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -25.5, -4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -26, -3.5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -27, -2.5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -27, -1.5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -27, -1.5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -1, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -2, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -3, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -4, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -5, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -6, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -7, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -8, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -9, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10, 10)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, 9)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, 8)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, 6)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10, 5)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -10.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -11.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -12.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -13.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -14.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -15.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -16.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -17.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -18.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -19.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -20.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -21.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -22.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -23.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -24.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -25.5, 4)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -26, 3)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -27, 2)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Backpack[tools].Grip = CFrame.new(-0.784089804, 0.623452663, 0.928474426, 0.611631632, 0.0202812403, -0.790882647, 0.107864097, 0.988198876, 0.108758211, 0.783755124, -0.151827812, 0.602226019) + Vector3.new(0, -27, 0)
-                game.Players.LocalPlayer.Backpack[tools].Name = "Big Black Dick Lmao"
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = oldcframe
-                wait(0.5)
-                for _, tool in ipairs(game:GetService("Players").LocalPlayer.Backpack:GetChildren()) do
-                        if tool:IsA("Tool") then
-                                if tool.Name == nametools then
-                                 tool.Parent = game:GetService("Players").LocalPlayer.Character
-                                end
-                        end
-                end
-    end
-})
-
-local funtab = Window:MakeTab({"اخرى", "home"})
-
--- Variável para guardar a posição original
-local posAnterior
-
--- Quantidade escolhida pelo usuário (default)
-local ballsAmount = 10
-
--- Função para contar quantas bolas você tem equipadas / na mochila
-local function contarBolas()
-    local player = game.Players.LocalPlayer
-    local count = 0
-
-    -- Conta bolas na mochila (Backpack)
-    local backpack = player:WaitForChild("Backpack")
-    for _, item in ipairs(backpack:GetChildren()) do
-        if item.Name == "Basketball" then
-            count = count + 1
-        end
-    end
-
-    -- Conta bolas equipadas (Character)
-    local character = player.Character
-    if character then
-        for _, item in ipairs(character:GetChildren()) do
-            if item.Name == "Basketball" then
-                count = count + 1
-            end
-        end
-    end
-
-    return count
-end
-
--- Função de lag que continua pegando até alcançar ballsAmount, desliga o toggle e teleporta o player
-local function lagarJogoLaptop(laptopPart)
-    local player = game.Players.LocalPlayer
-
-    while toggles.LagLaptop do
-        local currentBalls = contarBolas()
-        if currentBalls >= ballsAmount then
-            print("Quantidade desejada alcançada:", currentBalls)
-
-            toggles.LagLaptop = false -- desliga o toggle automaticamente
-
-            -- Teleporta para a posição anterior salva
-            if posAnterior then
-                local character = player.Character or player.CharacterAdded:Wait()
-                local hrp = character:WaitForChild("HumanoidRootPart")
-                hrp.CFrame = posAnterior
-                print("Teletransportado para a posição anterior.")
-            end
-
-            break
-        end
-
-        local character = player.Character or player.CharacterAdded:Wait()
-        local hrp = character:WaitForChild("HumanoidRootPart")
-        hrp.CFrame = laptopPart.CFrame + Vector3.new(0, 3, 0)
-        clickLaptopPart(laptopPart)
-        print("Pegando bola... Total agora:", currentBalls + 1)
-
-        task.wait(0.1) -- espera um pouco para o servidor processar
-    end
-end
-
--- TextBox para definir quantidade
-funtab:AddTextBox({
-    Name = "ضع عدد الكرات",
-    PlaceholderText = tostring(ballsAmount),
-    Callback = function(value)
-        local n = tonumber(value)
-        if n and n > 0 then
-            ballsAmount = math.floor(n)
-            print("Quantidade ajustada para:", ballsAmount)
-        else
-            print("Digite um número válido maior que zero")
-        end
-    end
-})
-
--- Toggle balls lopper
-funtab:AddToggle({
-    Name = "نسخ الكرات",
-    Default = false,
-    Callback = function(state)
-        toggles.LagLaptop = state
-
-        local player = game.Players.LocalPlayer
-        local character = player.Character or player.CharacterAdded:Wait()
-        local hrp = character:WaitForChild("HumanoidRootPart")
-
-        if state then
-            posAnterior = hrp.CFrame
-
-            local laptopPart = workspace:FindFirstChild("WorkspaceCom")
-                and workspace.WorkspaceCom:FindFirstChild("001_GiveTools")
-                and workspace.WorkspaceCom["001_GiveTools"]:FindFirstChild("Basketball")
-
-            if laptopPart and laptopPart:IsA("BasePart") then
-                spawn(function()
-                    lagarJogoLaptop(laptopPart)
-                end)
-            else
-                warn("ball")
-            end
-        else
-            -- REMOVIDO o teleporte para posição anterior aqui
-            print("balls lopper desativado")
-        end
-    end
-})
-
-
-
-funtab:AddToggle({
-    Name = "اوتو نسخ كرات",
-    Default = false,
-    Callback = function(state)
-        toggles.LagLaptop = state
-
-        if state then
-            spawn(function()
-                while toggles.LagLaptop do
-                    local char = game.Players.LocalPlayer.Character
-                    if char then
-                        local tools = {}
-                        for _, tool in ipairs(char:GetChildren()) do
-                            if tool:IsA("Tool") then
-                                table.insert(tools, tool)
-                            end
-                        end
-
-                        for _, tool in ipairs(tools) do
-                            if not toggles.LagLaptop then break end
-                            pcall(function()
-                                tool:Activate()
-                            end)
-                            task.wait(0.02) -- bem rápido entre cada uso
-                        end
-                    end
-                    task.wait(0.02) -- quase instantâneo antes de repetir
-                end
-            end)
-        else
-            print("balls lopper desativado")
-        end
-    end
-})
-
-
 local Tab = Window:MakeTab({"الاسماء", "Paper"})
-
-
 
 local SectionNames = Tab:AddSection({
     Name = "الاسماء"
@@ -13933,477 +11804,12 @@ local names = {
 
 for _, name in ipairs(names) do
     Tab:AddButton({
-        Name = "Name: " .. name[1],
+        Name = "الاسم: " .. name[1],
         Callback = function()
             game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", name[2])
         end
     })
 end
-
-local UniversalTab = Window:MakeTab({"", "plane"})
-
--- Seção para Scripts 
-Section = UniversalTab:AddSection({
-    Name = "Scripts"
-})
-
--- Botão para ShiftLock
-UniversalTab:AddButton({
-    Name = "ShiftLock",
-    Callback = function()
-        loadstring(game:HttpGet("https://pastebin.com/raw/N2tiHgyv"))()
-    end
-})
-
--- Botão para Ghost Hub
-UniversalTab:AddButton({
-    Name = "Ghost Hub",
-    Callback = function()
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
-    end
-})
-
--- Botão para Infinite Yield
-UniversalTab:AddButton({
-    Name = "InfiniteYield - Cmd",
-    Callback = function()
-        loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "سكربت ثقب اسود",
-    Description = "",
-    Callback = function()
-        local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-local Workspace = game:GetService("Workspace")
-
-local angle = 1
-local radius = 10
-local blackHoleActive = false
-
-local function setupPlayer()
-    local character = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
-    local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-
-    local Folder = Instance.new("Folder", Workspace)
-    local Part = Instance.new("Part", Folder)
-    local Attachment1 = Instance.new("Attachment", Part)
-    Part.Anchored = true
-    Part.CanCollide = false
-    Part.Transparency = 1
-
-    return humanoidRootPart, Attachment1
-end
-
-local humanoidRootPart, Attachment1 = setupPlayer()
-
-if not getgenv().Network then
-    getgenv().Network = {
-        BaseParts = {},
-        Velocity = Vector3.new(14.46262424, 14.46262424, 14.46262424)
-    }
-
-    Network.RetainPart = function(part)
-        if typeof(part) == "Instance" and part:IsA("BasePart") and part:IsDescendantOf(Workspace) then
-            table.insert(Network.BaseParts, part)
-            part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
-            part.CanCollide = false
-        end
-    end
-
-    local function EnablePartControl()
-        LocalPlayer.ReplicationFocus = Workspace
-        RunService.Heartbeat:Connect(function()
-            sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
-            for _, part in pairs(Network.BaseParts) do
-                if part:IsDescendantOf(Workspace) then
-                    part.Velocity = Network.Velocity
-                end
-            end
-        end)
-    end
-
-    EnablePartControl()
-end
-
-local function ForcePart(v)
-    if v:IsA("Part") and not v.Anchored and not v.Parent:FindFirstChild("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
-        for _, x in next, v:GetChildren() do
-            if x:IsA("BodyAngularVelocity") or x:IsA("BodyForce") or x:IsA("BodyGyro") or x:IsA("BodyPosition") or x:IsA("BodyThrust") or x:IsA("BodyVelocity") or x:IsA("RocketPropulsion") then
-                x:Destroy()
-            end
-        end
-        if v:FindFirstChild("Attachment") then
-            v:FindFirstChild("Attachment"):Destroy()
-        end
-        if v:FindFirstChild("AlignPosition") then
-            v:FindFirstChild("AlignPosition"):Destroy()
-        end
-        if v:FindFirstChild("Torque") then
-            v:FindFirstChild("Torque"):Destroy()
-        end
-        v.CanCollide = false
-        
-        local Torque = Instance.new("Torque", v)
-        Torque.Torque = Vector3.new(1000000, 1000000, 1000000)
-        local AlignPosition = Instance.new("AlignPosition", v)
-        local Attachment2 = Instance.new("Attachment", v)
-        Torque.Attachment0 = Attachment2
-        AlignPosition.MaxForce = math.huge
-        AlignPosition.MaxVelocity = math.huge
-        AlignPosition.Responsiveness = 500
-        AlignPosition.Attachment0 = Attachment2
-        AlignPosition.Attachment1 = Attachment1
-    end
-end
-
-local function toggleBlackHole()
-    blackHoleActive = not blackHoleActive
-    if blackHoleActive then
-        for _, v in next, Workspace:GetDescendants() do
-            ForcePart(v)
-        end
-
-        Workspace.DescendantAdded:Connect(function(v)
-            if blackHoleActive then
-                ForcePart(v)
-            end
-        end)
-
-        spawn(function()
-            while blackHoleActive and RunService.RenderStepped:Wait() do
-                angle = angle + math.rad(2)
-
-                local offsetX = math.cos(angle) * radius
-                local offsetZ = math.sin(angle) * radius
-
-                Attachment1.WorldCFrame = humanoidRootPart.CFrame * CFrame.new(offsetX, 0, offsetZ)
-            end
-        end)
-    else
-        Attachment1.WorldCFrame = CFrame.new(0, -1000, 0)
-    end
-end
-
-LocalPlayer.CharacterAdded:Connect(function()
-    humanoidRootPart, Attachment1 = setupPlayer()
-    if blackHoleActive then
-        toggleBlackHole()
-    end
-end)
-
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/miroeramaa/TurtleLib/main/TurtleUiLib.lua"))()
-local window = library:Window("Projeto LKB")
-
-window:Slider("Radius Blackhole",1,100,10, function(Value)
-   radius = Value
-end)
-
-window:Toggle("Blackhole", true, function(Value)
-       if Value then
-            toggleBlackHole()
-        else
-            blackHoleActive = false
-        end
-end)
-
-spawn(function()
-    while true do
-        RunService.RenderStepped:Wait()
-        if blackHoleActive then
-            angle = angle + math.rad(angleSpeed)
-        end
-    end
-end)
-
-toggleBlackHole()
-    end
-})
-
-UniversalTab:AddButton({
-    Name = "سكربت سحب الاشياء للاعب",
-    Description = "السكربت عباره عن سحب الابواب للاعب الذي تضع اسمه",
-    Callback = function()
-        -- Gui to Lua
--- Version: 3.2
-
--- Instances:
-
-local Gui = Instance.new("ScreenGui")
-local Main = Instance.new("Frame")
-local Box = Instance.new("TextBox")
-local UITextSizeConstraint = Instance.new("UITextSizeConstraint")
-local Label = Instance.new("TextLabel")
-local UITextSizeConstraint_2 = Instance.new("UITextSizeConstraint")
-local Button = Instance.new("TextButton")
-local UITextSizeConstraint_3 = Instance.new("UITextSizeConstraint")
-
---Properties:
-
-Gui.Name = "Gui"
-Gui.Parent = gethui()
-Gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-Main.Name = "Main"
-Main.Parent = Gui
-Main.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
-Main.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Main.BorderSizePixel = 0
-Main.Position = UDim2.new(0.335954279, 0, 0.542361975, 0)
-Main.Size = UDim2.new(0.240350261, 0, 0.166880623, 0)
-Main.Active = true
-Main.Draggable = true
-
-Box.Name = "Box"
-Box.Parent = Main
-Box.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
-Box.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Box.BorderSizePixel = 0
-Box.Position = UDim2.new(0.0980926454, 0, 0.218712583, 0)
-Box.Size = UDim2.new(0.801089942, 0, 0.364963502, 0)
-Box.FontFace = Font.new("rbxasset://fonts/families/SourceSansSemibold.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-Box.PlaceholderText = "اكتب اسم الاعب هنا"
-Box.Text = ""
-Box.TextColor3 = Color3.fromRGB(255, 255, 255)
-Box.TextScaled = true
-Box.TextSize = 31.000
-Box.TextWrapped = true
-
-UITextSizeConstraint.Parent = Box
-UITextSizeConstraint.MaxTextSize = 31
-
-Label.Name = "Label"
-Label.Parent = Main
-Label.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
-Label.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Label.BorderSizePixel = 0
-Label.Size = UDim2.new(1, 0, 0.160583943, 0)
-Label.FontFace = Font.new("rbxasset://fonts/families/Nunito.json", Enum.FontWeight.Bold, Enum.FontStyle.Normal)
-Label.Text = "سحب الاشياء | Made by: DR4V3X"
-Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-Label.TextScaled = true
-Label.TextSize = 14.000
-Label.TextWrapped = true
-
-UITextSizeConstraint_2.Parent = Label
-UITextSizeConstraint_2.MaxTextSize = 21
-
-Button.Name = "Button"
-Button.Parent = Main
-Button.BackgroundColor3 = Color3.fromRGB(95, 95, 95)
-Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-Button.BorderSizePixel = 0
-Button.Position = UDim2.new(0.183284417, 0, 0.656760991, 0)
-Button.Size = UDim2.new(0.629427791, 0, 0.277372271, 0)
-Button.Font = Enum.Font.Nunito
-Button.Text = "سحب الاشياء | مطفئ"
-Button.TextColor3 = Color3.fromRGB(255, 255, 255)
-Button.TextScaled = true
-Button.TextSize = 28.000
-Button.TextWrapped = true
-
-UITextSizeConstraint_3.Parent = Button
-UITextSizeConstraint_3.MaxTextSize = 28
-
--- Scripts:
-
-local Players = game:GetService("Players")
-local RunService = game:GetService("RunService")
-local LocalPlayer = Players.LocalPlayer
-local UserInputService = game:GetService("UserInputService")
-local Workspace = game:GetService("Workspace")
-
-local character
-local humanoidRootPart
-
-mainStatus = true
-UserInputService.InputBegan:Connect(function(input, gameProcessedEvent)
-	if input.KeyCode == Enum.KeyCode.RightControl and not gameProcessedEvent then
-		mainStatus = not mainStatus
-		Main.Visible = mainStatus
-	end
-end)
-
-local Folder = Instance.new("Folder", Workspace)
-local Part = Instance.new("Part", Folder)
-local Attachment1 = Instance.new("Attachment", Part)
-Part.Anchored = true
-Part.CanCollide = false
-Part.Transparency = 1
-
-if not getgenv().Network then
-	getgenv().Network = {
-		BaseParts = {},
-		Velocity = Vector3.new(14.46262424, 14.46262424, 14.46262424)
-	}
-
-	Network.RetainPart = function(Part)
-		if Part:IsA("BasePart") and Part:IsDescendantOf(Workspace) then
-			table.insert(Network.BaseParts, Part)
-			Part.CustomPhysicalProperties = PhysicalProperties.new(0, 0, 0, 0, 0)
-			Part.CanCollide = false
-		end
-	end
-
-	local function EnablePartControl()
-		LocalPlayer.ReplicationFocus = Workspace
-		RunService.Heartbeat:Connect(function()
-			sethiddenproperty(LocalPlayer, "SimulationRadius", math.huge)
-			for _, Part in pairs(Network.BaseParts) do
-				if Part:IsDescendantOf(Workspace) then
-					Part.Velocity = Network.Velocity
-				end
-			end
-		end)
-	end
-
-	EnablePartControl()
-end
-
-local function ForcePart(v)
-	if v:IsA("BasePart") and not v.Anchored and not v.Parent:FindFirstChildOfClass("Humanoid") and not v.Parent:FindFirstChild("Head") and v.Name ~= "Handle" then
-		for _, x in ipairs(v:GetChildren()) do
-			if x:IsA("BodyMover") or x:IsA("RocketPropulsion") then
-				x:Destroy()
-			end
-		end
-		if v:FindFirstChild("Attachment") then
-			v:FindFirstChild("Attachment"):Destroy()
-		end
-		if v:FindFirstChild("AlignPosition") then
-			v:FindFirstChild("AlignPosition"):Destroy()
-		end
-		if v:FindFirstChild("Torque") then
-			v:FindFirstChild("Torque"):Destroy()
-		end
-		v.CanCollide = false
-		local Torque = Instance.new("Torque", v)
-		Torque.Torque = Vector3.new(100000, 100000, 100000)
-		local AlignPosition = Instance.new("AlignPosition", v)
-		local Attachment2 = Instance.new("Attachment", v)
-		Torque.Attachment0 = Attachment2
-		AlignPosition.MaxForce = math.huge
-		AlignPosition.MaxVelocity = math.huge
-		AlignPosition.Responsiveness = 200
-		AlignPosition.Attachment0 = Attachment2
-		AlignPosition.Attachment1 = Attachment1
-	end
-end
-
-local blackHoleActive = false
-local DescendantAddedConnection
-
-local function toggleBlackHole()
-	blackHoleActive = not blackHoleActive
-	if blackHoleActive then
-		Button.Text = "سحب الاشياء | مشغل"
-		for _, v in ipairs(Workspace:GetDescendants()) do
-			ForcePart(v)
-		end
-
-		DescendantAddedConnection = Workspace.DescendantAdded:Connect(function(v)
-			if blackHoleActive then
-				ForcePart(v)
-			end
-		end)
-
-		spawn(function()
-			while blackHoleActive and RunService.RenderStepped:Wait() do
-				Attachment1.WorldCFrame = humanoidRootPart.CFrame
-			end
-		end)
-	else
-		Button.Text = "سحب الاشياء | مطفء"
-		if DescendantAddedConnection then
-			DescendantAddedConnection:Disconnect()
-		end
-	end
-end
-
-local function getPlayer(name)
-	local lowerName = string.lower(name)
-	for _, p in pairs(Players:GetPlayers()) do
-		local lowerPlayer = string.lower(p.Name)
-		if string.find(lowerPlayer, lowerName) then
-			return p
-		elseif string.find(string.lower(p.DisplayName), lowerName) then
-			return p
-		end
-	end
-end
-
-local player = nil
-
-local function VDOYZQL_fake_script() -- Box.Script 
-	local script = Instance.new('Script', Box)
-
-	script.Parent.FocusLost:Connect(function(enterPressed)
-		if enterPressed then
-			player = getPlayer(Box.Text)
-			if player then
-				Box.Text = player.Name
-				print("Player found:", player.Name)
-			else
-				print("Player not found")
-			end
-		end
-	end)
-end
-coroutine.wrap(VDOYZQL_fake_script)()
-local function JUBNQKI_fake_script() -- Button.Script 
-	local script = Instance.new('Script', Button)
-
-	script.Parent.MouseButton1Click:Connect(function()
-		if player then
-			character = player.Character or player.CharacterAdded:Wait()
-			humanoidRootPart = character:WaitForChild("HumanoidRootPart")
-			toggleBlackHole()
-		else
-			print("Player is not selected")
-		end
-	end)
-end
-coroutine.wrap(JUBNQKI_fake_script)()
-    end
-})
-
-local Tab = Window:MakeTab({"الكشف", Icon = "settings2"})
-
-local ESP = loadstring(game:HttpGet("https://kiriot22.com/releases/ESP.lua"))()
-ESP:Toggle(true)
-ESP.Players = true
-ESP.Names = true
-
-local Toggle1 = Tab:AddToggle({
-  Name = "كشف اماكن اللاعبين",
-  Description = "عندما تضغط على الزر سيظهر مربع لكشف اماكن اللاعبين على كل لاعب و يظهر الاسم",
-  Default = false 
-})
-Toggle1:Callback(function(Value)
- ESP.Players = Value
-end)
-
-local Tab = Window:MakeTab({"الاعدادات", Icon = "settings"})
-
-local Dropdown = Tab:AddDropdown({
-  Name = "حجم واجهه السكربت",
-  Description = "اختر حجم واجهه السكربت",
-  Options = {"صغير", "متوسط", "كبير"},
-  Default = "كبير",
-  Flag = "Misc/UIScale",
-  Callback = function(Value)
-    if Value == "كبير" then
-        redzlib:SetScale(450)
-      elseif Value == "متوسط" then
-        redzlib:SetScale(620)
-      else
-        redzlib:SetScale(760)
-      end
-  end
-})
 
 wait(1)
 
