@@ -8209,3 +8209,12 @@ button.MouseButton1Click:Connect(function()
 end)
   end
 })
+
+local Tab = Window:MakeTab({"السكربتات القويه", Icon = ""})
+
+Tab:AddButton({
+    Name = "Ghost Hub",
+    Callback = function()
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/main/GhostHub'))()
+    end
+})
