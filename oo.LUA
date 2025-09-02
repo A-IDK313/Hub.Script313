@@ -8345,3 +8345,83 @@ Tab:AddButton({
     end
 end
 })
+
+local Section = Tab:AddSection({
+	Name = "رسائل الشات"
+})
+
+
+-- SeÃ§Ã£o: Enviar uma mensagem normal
+local playerInput1 = ""
+
+Tab:AddSection({Name = "رساله عاديه"})
+
+Tab:AddTextBox({
+    Name = "اكتب رسالتك",
+    Default = "",
+    TextDisappear = false,
+    Callback = function(text)
+        playerInput1 = text
+    end
+})
+
+Tab:AddButton({
+    Name = "ارسال",
+    Callback = function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r" .. playerInput1
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+    end
+})
+
+-- SeÃ§Ã£o: Enviar mensagem com prefixo System
+local playerInput2 = ""
+
+Tab:AddSection({Name = "رساله سيستم"})
+
+Tab:AddTextBox({
+    Name = "اكتب رسالتك",
+    Default = "",
+    TextDisappear = false,
+    Callback = function(text)
+        playerInput2 = text
+    end
+})
+
+Tab:AddButton({
+    Name = "ارسال",
+    Callback = function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rSystem: " .. playerInput2
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+    end
+})
+
+Tab:AddSection({Name = "رساله DR4V3X HUB"})
+
+Tab:AddTextBox({
+    Name = "اكتب رسالتك",
+    Default = "",
+    TextDisappear = false,
+    Callback = function(text)
+        playerInput1 = text
+    end
+})
+
+Tab:AddButton({
+    Name = "ارسال",
+    Callback = function()
+        local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rDR4V3X HUB: " .. playerInput1
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+    end
+})
