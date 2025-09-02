@@ -8346,59 +8346,308 @@ Tab:AddButton({
 end
 })
 
-local Section = Tab:AddSection({
-	Name = "رسائل الشات"
+
+-- Aba Child
+local ChildTab = Window:MakeTab({"الطفل", "baby"})
+
+local Section = ChildTab:AddSection({
+    Name = "الطفل"
 })
 
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
--- SeÃ§Ã£o: Enviar uma mensagem normal
-local playerInput1 = ""
+local chasingplayer = nil
 
-Tab:AddSection({Name = "رساله عاديه"})
-
-Tab:AddTextBox({
-    Name = "اكتب رسالتك",
-    Default = "",
-    TextDisappear = false,
-    Callback = function(text)
-        playerInput1 = text
+-- Função que retorna a lista atualizada de jogadores (exceto o local)
+local function updatePlayerList()
+    local playerList = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playerList, player.Name)
+        end
     end
-})
+    return playerList
+end
 
-Tab:AddButton({
-    Name = "ارسال",
-    Callback = function()
-        local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r" .. playerInput1
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+local playerChild = ChildTab:AddDropdown({
+    Name = "اختار لاعب",
+    Options = updatePlayerList(),  -- Inicializa com lista atualizada
+    Default = "",
+    Callback = function(selected)
+        if Players:FindFirstChild(selected) then
+            chasingplayer = selected
         else
+            chasingplayer = nil
         end
     end
 })
 
--- SeÃ§Ã£o: Enviar mensagem com prefixo System
-local playerInput2 = ""
-
-Tab:AddSection({Name = "رساله سيستم"})
-
-Tab:AddTextBox({
-    Name = "اكتب رسالتك",
-    Default = "",
-    TextDisappear = false,
-    Callback = function(text)
-        playerInput2 = text
-    end
-})
-
-Tab:AddButton({
-    Name = "ارسال",
+ChildTab:AddButton({
+    Name = "تحديث القائمه",
     Callback = function()
-        local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rSystem: " .. playerInput2
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
+        local updatedPlayers = updatePlayerList()
+        if playerChild and updatedPlayers then
+            pcall(function()
+                playerChild:Set(updatedPlayers)  -- Usa Set para atualizar opções
+            end)
+
+            -- Se o jogador selecionado não existir mais, reseta seleção
+            if chasingplayer and not Players:FindFirstChild(chasingplayer) then
+                chasingplayer = nil
+                pcall(function()
+                    playerChild:SetValue("")  -- Reseta seleção no dropdown
+                end)
+            end
         end
     end
 })
+
+
+-- Eventos de entrada/saída de players
+game.Players.PlayerAdded:Connect(function()
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+    end
+end)
+
+game.Players.PlayerRemoving:Connect(function(player)
+    task.wait(0.1)
+    local updatedPlayers = updatePlayerList()
+    if playerChild and updatedPlayers then
+        pcall(function()
+            playerChild:Refresh(updatedPlayers)
+        end)
+        if chasingplayer == player.Name then
+            chasingplayer = nil
+            pcall(function()
+                playerChild:Set("")
+            end)
+        end
+    end
+end)
+
+ChildTab:AddButton({
+    Name = "ارسال الطفل",
+    Callback = function()
+        if not chasingplayer then
+            warn("Nenhum jogador selecionado!")
+            return
+        end
+        if not workspace:FindFirstChild(pl.Name) or not workspace[pl.Name]:FindFirstChild("FollowCharacter") then
+            local args = {
+                [1] = "CharacterFollowSpawnPlayer",
+                [2] = "BabyBoy"
+            }
+            local success, err = pcall(function()
+                game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+            end)
+            if not success then
+                warn("Erro ao enviar criança: " .. err)
+            end
+        end
+        
+        task.wait(0.2)
+        
+        if workspace:FindFirstChild(pl.Name) then
+            for _, v in pairs(workspace[pl.Name]:GetChildren()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = true
+                end
+            end
+        end
+
+        local target = chasingplayer
+        if workspace:FindFirstChild(target) and workspace:FindFirstChild(pl.Name) and workspace[pl.Name]:FindFirstChild("FollowCharacter") then
+            workspace[pl.Name].FollowCharacter.Parent = workspace[target]
+
+            if rawget(getgenv(), "RunService") then
+                return
+            end
+
+            getgenv().RunService = game:GetService("RunService").Heartbeat:Connect(function()
+                local followCharacter = workspace[target]:FindFirstChild("FollowCharacter")
+                if followCharacter and followCharacter:FindFirstChild("Torso") and followCharacter.Torso:FindFirstChild("BodyPosition") then
+                    local humanoidRootPart = workspace[target]:FindFirstChild("HumanoidRootPart")
+                    if humanoidRootPart then
+                        followCharacter.Torso.BodyPosition.Position = humanoidRootPart.Position - (humanoidRootPart.CFrame.LookVector * 3)
+                        followCharacter.Torso.BodyGyro.CFrame = humanoidRootPart.CFrame
+                    end
+                end
+            end)
+        end
+    end
+})
+
+ChildTab:AddButton({
+    Name = "ارجاع الطفل",
+    Callback = function()
+        if rawget(getgenv(), "RunService") then
+            getgenv().RunService:Disconnect()
+            getgenv().RunService = nil
+        end
+
+        local args = { [1] = "DeleteFollowCharacter" }
+        local success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args))
+        end)
+        if not success then
+            warn("Erro ao retornar criança: " .. err)
+        end
+
+        local args1 = { [1] = "CharacterFollowSpawnPlayer", [2] = "BabyBoy" }
+        success, err = pcall(function()
+            game:GetService("ReplicatedStorage").RE:FindFirstChild("1Bab1yFollo1w"):FireServer(unpack(args1))
+        end)
+        if not success then
+            warn("Erro ao spawnar criança: " .. err)
+        end
+    end
+})
+
+ChildTab:AddToggle({
+    Name = "رؤيه الاعب",
+    Default = false,
+    Callback = function(Value)
+        local Players = game:GetService("Players")
+        local RunService = game:GetService("RunService")
+        local LocalPlayer = Players.LocalPlayer
+        local Camera = workspace.CurrentCamera
+
+        if Value then
+            if not chasingplayer then
+                warn("Nenhum jogador selecionado para spectar!")
+                return false
+            end
+
+            if not rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection = RunService.Heartbeat:Connect(function()
+                    local targetPlayer = Players:FindFirstChild(chasingplayer)
+                    if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("Humanoid") then
+                        Camera.CameraSubject = targetPlayer.Character.Humanoid
+                    else
+                        if rawget(getgenv(), "CameraConnection") then
+                            getgenv().CameraConnection:Disconnect()
+                            getgenv().CameraConnection = nil
+                        end
+                        Camera.CameraSubject = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") or nil
+                    end
+                end)
+            end
+        else
+            if rawget(getgenv(), "CameraConnection") then
+                getgenv().CameraConnection:Disconnect()
+                getgenv().CameraConnection = nil
+            end
+            if LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid") then
+                Camera.CameraSubject = LocalPlayer.Character.Humanoid
+            end
+        end
+    end
+})
+
+local Tab = Window:MakeTab({"التنقل", "tp"}) -- Nome do ícone: 'portal' em minúsculo para teleporte
+
+-- Botões de Teleporte
+local teleportButtons = {
+{"نجمه مجانيه", CFrame.new(-4, -134, 14)},
+{"بيت 28", CFrame.new(-100, 3, 1068)},
+{"الفندق", CFrame.new(192, 4, 272)},
+{"مدخل ساحه الفنادق", CFrame.new(136, 4, 117)},
+{"المكان السري", CFrame.new(-119, -28, 235)},
+{"البيت المهجور / بيت صاحب ماب البيوت", CFrame.new(986, 4, 63)},
+{"مكان البوابه", CFrame.new(672, 4, -296)},
+{"تحت الماب", CFrame.new(505, -75, 143)},
+{"داخل المدرسه", CFrame.new(-312, 4, 211)},
+{"داخل المطعم", CFrame.new(161, 8, 52)}, 
+{"البدايه", CFrame.new(-26, 4, -23)},
+{"فوق القوس الذي بقرب حضيره الاحصنه", CFrame.new(-589, 141, -59)},
+{"داخل المستشفى", CFrame.new(-309, 4, 71)},
+{"مكان الطاقه", CFrame.new(179, 4, -464)},
+{"ورشه العمل المخفيه", CFrame.new(0, 4, -495)},
+{"تحت الجبل", CFrame.new(-343, 4, -613)},
+{"جزيره", CFrame.new(-1925, 23, 127)},
+{"امام الفندق", CFrame.new(182, 4, 150)},
+{"الجبل الثلجي", CFrame.new(-670, 251, 765)},
+{"داخل البنك", CFrame.new(2.28, 4.65, 254.58)},
+{"متجر الملابس", CFrame.new(-46.15, 4.65, 253.20)},
+{"متجر/تبني/الاعتناء بالحيوانات", CFrame.new(-88.48, 22.05, 262.34)},
+{"عياده", CFrame.new(-53.58, 22.15, 265.61)},
+{"الكوفي", CFrame.new(-97.12, 4.65, 254.99)}
+}
+
+for _, btn in ipairs(teleportButtons) do
+    Tab:AddButton({
+        btn[1],
+        function()
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = btn[2]
+        end
+    })
+end
+
+
+local Tab = Window:MakeTab({"الاسماء", "Paper"})
+
+local SectionNames = Tab:AddSection({
+    Name = "الاسماء"
+})
+
+local names = {
+    {"Anonymus", " Anonymus "},
+    {"KILLER", " KILLER "},
+    {"ERR0R_666", " ERR0R_666 "},
+    {"GHOST", " GHOST "},
+    {"JOKER", " JOKER "},
+    {"ADMIN", " ADMIN "},
+    {"TUBERS93", " TUBERS93 "},
+    {"C00LKID", " C00LKID "},
+}
+
+for _, name in ipairs(names) do
+    Tab:AddButton({
+        Name = "الاسم: " .. name[1],
+        Callback = function()
+            game:GetService("ReplicatedStorage").RE["1RPNam1eTex1t"]:FireServer("RolePlayName", name[2])
+        end
+    })
+end
+
+wait(1)
+
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️تم التفعيل بنجاح DR4V3X HUB✅️"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+
+wait(1)
+
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rتحديث V2.0"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+        
+wait(1)
+
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r👑الافضل👑"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
+
+wait(1)
+
+local TextChatService = game:GetService("TextChatService")
+        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rعمكم DR4V3X"
+            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
+        else
+        end
