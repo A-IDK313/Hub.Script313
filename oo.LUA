@@ -8402,26 +8402,3 @@ Tab:AddButton({
         end
     end
 })
-
-Tab:AddSection({Name = "رساله DR4V3X HUB"})
-
-Tab:AddTextBox({
-    Name = "اكتب رسالتك",
-    Default = "",
-    TextDisappear = false,
-    Callback = function(text)
-        playerInput1 = text
-    end
-})
-
-Tab:AddButton({
-    Name = "ارسال",
-    Callback = function()
-        local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\rDR4V3X HUB: " .. playerInput1
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
-        end
-    end
-})
