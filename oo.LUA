@@ -289,14 +289,6 @@ for _, mensagem in ipairs(mensagens) do
 	wait(0.1)
 end
 
-local args = {
-    [1] = "RolePlayName",
-    [2] ="DR4V3X HUB RP"
-}
-
-game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
-
-
 local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/cubodegelo1116/ui/refs/heads/main/ui"))()
 
   Libary:SetTheme("c00l")
