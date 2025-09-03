@@ -8345,21 +8345,3 @@ Tab:AddButton({
     end
 end
 })
-
-wait(1)
-
-local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r✅️تم التفعيل بنجاح DR4V3X HUB V2.0✅️"
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
-        end
-
-wait(1)
-
-local TextChatService = game:GetService("TextChatService")
-        if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
-            local message = ".\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r👑عمكم DR4V3X الافضل👑"
-            TextChatService.TextChannels.RBXGeneral:SendAsync(message)
-        else
-        end
