@@ -151,6 +151,20 @@ print("Loaded successfully! Enjoy using our script!")
 
 -- ... resto do seu código ...
 
+local args = {
+    [1] = "PickingRPNameColor",
+    [2] = Color3.fromRGB(255, 0, 0), -- Amarelo
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
+
+local args = {
+    [1] = "PickingRPBioColor",
+    [2] = Color3.fromRGB(0, 0, 0), -- Blue
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eColo1r"):FireServer(unpack(args))
+
 local remote = game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t")
 local selectedPlayer = nil 
 
@@ -158,70 +172,37 @@ local mensagens = {
 	"",
 	"",
 	"L",
-	"L",
-	"LO",
 	"LO",
 	"LOA",
-	"LOA",
-	"LOAD",
 	"LOAD",
 	"LOADI",
-	"LOADI",
-	"LOADIN",
 	"LOADIN",
 	"LOADING",
-	"LOADING",
 	"LOADING.",
-	"LOADING.",
-	"LOADING..",
 	"LOADING..",
 	"LOADING...",
-	"LOADING...",
-	"LOADING.",
 	"LOADING.",
 	"LOADING..",
-	"LOADING..",
-	"LOADING...",
 	"LOADING...",
 	"W",
-	"W",
-	"WE",
 	"WE",
 	"WEL",
-	"WEL",
-	"WELC",
 	"WELC",
 	"WELCO",
-	"WELCO",
-	"WELCOM",
 	"WELCOM",
 	"WELCOME",
-	"WELCOME",
-	"WELCOME ",
 	"WELCOME ",
 	"WELCOME T",
-	"WELCOME T",
-	"WELCOME TO",
 	"WELCOME TO",
 	"WELCOME TO ",
-	"WELCOME TO ",
-	"WELCOME TO M",
 	"WELCOME TO M",
 	"WELCOME TO MY",
-	"WELCOME TO MY",
-	"WELCOME TO MY ",
 	"WELCOME TO MY ",
 	"WELCOME TO MY S",
-	"WELCOME TO MY S",
-	"WELCOME TO MY SC",
 	"WELCOME TO MY SC",
 	"WELCOME TO MY SCR",
-	"WELCOME TO MY SCR",
-	"WELCOME TO MY SCRI",
 	"WELCOME TO MY SCRI",
 	"WELCOME TO MY SCRIP",
-	"WELCOME TO MY SCRIP",
-	"WELCOME TO MY SCRIPT",
 	"WELCOME TO MY SCRIPT",
 	"L",
 	"L",
@@ -238,42 +219,23 @@ local mensagens = {
 	"LOADING",
 	"LOADING",
 	"LOADING.",
-	"LOADING.",
-	"LOADING..",
 	"LOADING..",
 	"LOADING...",
-	"LOADING...",
-	"LOADING.",
 	"LOADING.",
 	"LOADING..",
-	"LOADING..",
-	"LOADING...",
 	"LOADING...",
 	"D",
-	"D",
-	"DR",
-	"DR",
-	"DR4",
+ "DR",
 	"DR4",
 	"DR4V",
-	"DR4V",
-	"DR4V3",
 	"DR4V3",
 	"DR4V3X",
-	"DR4V3X",
-	"DR4V3X ",
 	"DR4V3X ",
 	"DR4V3X H",
-	"DR4V3X H",
-	"DR4V3X HU",
 	"DR4V3X HU",
 	"DR4V3X HUB",
-	"DR4V3X HUB",
-	"DR4V3X HUB ",
-	"DR4V3X HUB ",
+ "DR4V3X HUB ",
 	"DR4V3X HUB R",
-	"DR4V3X HUB R",
-	"DR4V3X HUB RP",
 	"DR4V3X HUB RP",
 }
 
@@ -316,13 +278,9 @@ local mensagens = {
 	"LOADING...",
 	"LOADING...",
 	"V",
-	"V",
-	"V2",
-	"V2",
-	"V2.",
-	"V2.",
-	"V2.0",
-	"V2.0",
+	"VI",
+	"VI.",
+	"VI.S",
 }
 
 
@@ -330,6 +288,13 @@ for _, mensagem in ipairs(mensagens) do
 	remote:FireServer("RolePlayBio", mensagem)
 	wait(0.1)
 end
+
+local args = {
+    [1] = "RolePlayName",
+    [2] ="DR4V3X HUB RP"
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("RE"):WaitForChild("1RPNam1eTex1t"):FireServer(unpack(args))
 
 
 local Libary = loadstring(game:HttpGet("https://raw.githubusercontent.com/cubodegelo1116/ui/refs/heads/main/ui"))()
